@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=0.7, user-scalable=0"/> <!--320-->
+    <title>{{title}}</title>
+    <link rel='stylesheet' href='css/style.css'/>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+  	<link rel="stylesheet" href="css/bootstrap-responsive.css" />
+  	<link rel="stylesheet" href="css/font-awesome.min.css" />
+  	<link rel="stylesheet" href="css/web.main.css" />
+
+    <script src="js/socket.io.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/app_client.js"></script>
+  </head>
+  <body>
+  		{{{body}}}
+  <div>
+    <audio src="musics/Future-Grid.mp3" autoplay loop></audio>
+  </div>
+  <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" style="padding-top: 2em; padding-bottom: 2em; background: #2c95e3;">
+              <div style="text-align: center; margin-top: 5%; ">
+                <img src="images/ajkuiz.png" style="width: 500px;">
+              </div>
+                <div class="modal-body" style=" ">
+                    <form role="form" id="myForm" style="width:50%; margin:0 auto;">
+                      <div class="form-group">
+                        <label for="username" style="color: #fff;"><span class="glyphicon glyphicon-user"></span> Username</label>
+                        <input type="text" class="form-control" id="username" style="" placeholder="Enter username">
+                      </div>
+                        <button type="submit" class="btn btn-info btn-block"><span class="glyphicon glyphicon-off"></span> Enter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+  </div>
+  <div id="myModalRoom" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" style="padding-top: 2em; padding-bottom: 2em; background: #2c95e3;">
+              <div style="text-align: center; margin-top: 5%; ">
+                <img src="images/ajkuiz.png" style="width: 500px;">
+              </div>
+                <div class="modal-body" style=" ">
+                    <form role="form" id="myFormRoom" style="width:50%; margin:0 auto;">
+                      <div class="form-group">
+                        <label for="roomname" style="color: #fff;"><span class="glyphicon glyphicon-user"></span> Input Room</label>
+                        <input type="text" class="form-control" id="roomname" style="" placeholder="Enter Room Number">
+                      </div>
+                        <button type="submit" class="btn btn-info btn-block"><span class="glyphicon glyphicon-off"></span> Enter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+  </div>
+  <div class="modal fade" id="myModalWinner" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div style="padding:10px 10px;text-align:center">
+
+          </div>
+          <div class="modal-body" style="padding:40px 50px;text-align:center">
+              <h3>Kuis sudah selesai, nilai kamu<br>
+                <span id="userScore" style="font-size:30px"></span>
+              </h3>
+            <button class="btn btn-default" onclick="location.reload()">Refresh</button>
+          </div>
+        </div> 
+      </div>
+  </div>
+  <div class="modal fade" id="myModalReady" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div style="padding:10px 10px;text-align:center">
+
+          </div>
+          <div style="text-align: center;">
+                <img src="images/load.gif" style="width: 300px  %;">
+              </div>
+          <div class="modal-body" style="padding:40px 50px;text-align:center">
+
+              <h3>
+                Hai <span id="haiUser"><br></span>,
+                Selamat datang di Room: <span id="haiRoom"></span><br>
+                <br>Menunggu pemain lain ...
+              </h3>
+          </div>
+        </div> 
+      </div>
+  </div>
+  </body>
+</html>
