@@ -26,6 +26,11 @@ $(document).on('click', '.but-cat', function(e)
 
 });
 
+socket.on("sendRoomID", function(data) {
+    myRoomID = data.id;
+    //Tambahin di layout id buat naruh nama room
+});
+
 socket.on('recvSoal', function(soal){
 	soal_=soal;
 	//console.log(soal_);
