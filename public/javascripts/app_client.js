@@ -25,7 +25,6 @@ $(document).on('submit','#myForm', function(e){
 	username =$('#username').val();
 	if(username!='')
 	{
-		socket.emit('user', socket.id,username);
 		$('#myModal').modal('hide');
 		$('#myModalRoom').modal();
 	}
@@ -91,6 +90,13 @@ socket.on('recvNoSoal', function(noSoal, soalData)
 	navigator.vibrate(1000);
 });
 
+socket.on("errorMsg", function(data) {
+  $("#errMsg").empty();
+  $("#errMsg").show();
+  $("#errMsg").append(data.msg + " Try <strong>" + data.proposedName + "</strong>");
+    toggleNameForm();
+    toggleChatWindow();
+});
 
 socket.on('recvScore', function(userScore){
 	var tmp_id = '/#'+socket.id;
