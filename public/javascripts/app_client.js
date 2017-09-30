@@ -8,6 +8,7 @@ $(document).ready(function(){
   	backdrop: 'static',
   	keyboard: true
 	});
+	var myRoomID = null;
 });
 
 window.onresize = function (event) {
@@ -96,6 +97,10 @@ socket.on("errorMsg", function(data) {
   $("#errMsg").append(data.msg + " Try <strong>" + data.proposedName + "</strong>");
     toggleNameForm();
     toggleChatWindow();
+});
+
+socket.on("sendRoomID", function(data) {
+    myRoomID = data.id;
 });
 
 socket.on('recvScore', function(userScore){
