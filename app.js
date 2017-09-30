@@ -8,6 +8,8 @@ var mysql = require('mysql');
 
 var Room = require('./room.js');
 
+var _ = require('underscore')._;
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -93,6 +95,17 @@ io.on('connection', function(socket){
       room.addPerson(socket.id);
       socket.emit("sendRoomID", {id: id});
         
+  });
+
+  socket.on("joinRoom", function(id) {
+    if (typeof people[socket.id] !== "undefined") {
+      var room = rooms[id];
+      room.addPerson(socket.id);
+      people[socket.id].roomID = id;
+      socket.room = room.id;
+      socket.join(socket.room);
+      socket.emit("sendRoomID", {id: id});
+    }
   });
 
 
