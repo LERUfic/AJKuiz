@@ -39,9 +39,9 @@ app.use('/users', users);
 
 var connection = mysql.createConnection({
   host     : 'localhost',
-  user     : 'sukhawari',
-  password : 'khawari',
-  database : 'ajkuis'
+  user     : 'agugelsatria',
+  password : 'root',
+  database : 'ajkuiz'
 });
 
 connection.connect();
