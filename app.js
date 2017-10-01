@@ -6,12 +6,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 
-var Room = require('./room.js');
 
-var _ = require('underscore')._;
-
-var routes = require('./routes/index');
+var index = require('./routes/index');
 var users = require('./routes/users');
+var admin = require('./routes/admin');
 
 var app = require('express')();
 var http = require('http').Server(app)
@@ -22,7 +20,7 @@ var express=require('express');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -36,12 +34,13 @@ app.use('/js',express.static(path.join(__dirname, 'public/javascripts')));
 app.use('/css',express.static(path.join(__dirname, 'public/stylesheets')));
 app.use('/font',express.static(path.join(__dirname, 'public/fonts')));
 
-app.use('/', routes);
+app.use('/', index);
 app.use('/users', users);
+app.use('/admin', admin);
 
 var connection = mysql.createConnection({
   host     : 'localhost',
-  user     : 'agugelsatria',
+  user     : 'root',
   password : 'root',
   database : 'ajkuiz'
 });
@@ -50,64 +49,13 @@ connection.connect();
 
 
 
-socket.set("log level", 1);
-var people = {};
-var rooms = {};
-var clients = [];
+var clients=[];
 
 
 io.on('connection', function(socket){
   console.log("Socket name: "+socket.username+", Socket id: "+socket.id);
-
-  socket.on("joinServer", function(name, roomID) {
-    var exists = false;
-
-    _.find(people, function(key,value) {
-      if (key.name.toLowerCase() === name.toLowerCase())
-        return exists = true;
-    });
-
-    if (exists) {
-      var randomNumber=Math.floor(Math.random()*1001)
-      do {
-        proposedName = name+randomNumber;
-        _.find(people, function(key,value) {
-          if (key.name.toLowerCase() === proposedName.toLowerCase())
-            return exists = true;
-        });
-      } while (!exists);
-      socket.emit("errorMsg", {msg: "The username already exists, please pick another one.", proposedName: proposedName});
-    } else {
-      people[socket.id] = {"name" : name, "roomID": roomID};
-      sockets.push(socket);
-    }
-  });
-
-  socket.on("createRoom", function() {
-      var id = new Date();
-      var room = new Room(name, id, socket.id);
-      rooms[id] = room;
-
-      //add room to socket, and auto join the creator of the room
-      socket.room = id;
-      socket.join(socket.room);
-      people[socket.id].roomID = id;
-      room.addPerson(socket.id);
-      socket.emit("sendRoomID", {id: id});
-        
-  });
-
-  socket.on("joinRoom", function(id) {
-    if (typeof people[socket.id] !== "undefined") {
-      var room = rooms[id];
-      room.addPerson(socket.id);
-      people[socket.id].roomID = id;
-      socket.room = room.id;
-      socket.join(socket.room);
-      socket.emit("sendRoomID", {id: id});
-    }
-  });
-
+  clients.push(socket);
+  socket.send(socket.id);
 
   socket.on('disconnect', function()
   {
@@ -135,8 +83,9 @@ io.on('connection', function(socket){
       });
   });
 
- socket.on('user', function(sock_id,username)
+  socket.on('user', function(sock_id,username)
   {
+     
       var tmp_id = '/#'+sock_id;
       for (i in clients) {
         if(clients[i].id==tmp_id)
@@ -145,6 +94,7 @@ io.on('connection', function(socket){
            console.log('ID socket = '+clients[i].id+', with username = '+clients[i].username);
         }
       }
+
   });
 
 
@@ -200,8 +150,6 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
-
 
 http.listen(listen_port, function(){
   console.log('listening on *: '+listen_port);
