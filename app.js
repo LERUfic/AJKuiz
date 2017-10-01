@@ -41,7 +41,7 @@ app.use('/users', users);
 
 var connection = mysql.createConnection({
   host     : 'localhost',
-  user     : 'agugelsatria',
+  user     : 'aguelsatria',
   password : 'root',
   database : 'ajkuiz'
 });
@@ -50,7 +50,7 @@ connection.connect();
 
 
 
-socket.set("log level", 1);
+io.set("log level", 1);
 var people = {};
 var rooms = {};
 var clients = [];
