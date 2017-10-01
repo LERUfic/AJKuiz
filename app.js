@@ -10,8 +10,9 @@ var Room = require('./room.js');
 
 var _ = require('underscore')._;
 
-var routes = require('./routes/index');
+var index = require('./routes/index');
 var users = require('./routes/users');
+var admin = require('./routes/admin');
 
 var app = require('express')();
 var http = require('http').Server(app)
@@ -22,7 +23,7 @@ var express=require('express');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -36,8 +37,10 @@ app.use('/js',express.static(path.join(__dirname, 'public/javascripts')));
 app.use('/css',express.static(path.join(__dirname, 'public/stylesheets')));
 app.use('/font',express.static(path.join(__dirname, 'public/fonts')));
 
-app.use('/', routes);
+app.use('/', index);
 app.use('/users', users);
+app.use('/admin', admin);
+
 
 var connection = mysql.createConnection({
   host     : 'localhost',
