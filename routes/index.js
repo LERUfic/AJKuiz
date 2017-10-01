@@ -4,12 +4,15 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index_client', { title: 'AJKuiz', layout: 'layouts/layout_client'});
+  res.render('index_client', { title: 'AJKuiz' });
 });
 
 router.get('/dashboard', function(req, res, next) {
-  res.render('index_dashboard', { title: 'AJKuiz Dashboard', layout: 'layouts/layout_server'});
+  res.render('index_dashboard', { title: 'AJKuiz Dashboard' });
 });
 
+router.get('/admin', function(req, res, next){
+	res.render('admin', { title: "Admin" });
+})
 
 module.exports = router;

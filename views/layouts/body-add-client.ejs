@@ -1,0 +1,54 @@
+<div>
+  <audio src="musics/Future-Grid.mp3" autoplay loop></audio>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content" style="padding-top: 2em; padding-bottom: 2em; background: #2c95e3;">
+      <div style="text-align: center; margin-top: 5%; ">
+        <img src="images/ajkuiz.png" style="width: 500px;">
+      </div>
+      <div class="modal-body" style=" ">
+        <form role="form" id="myForm" style="width:50%; margin:0 auto;">
+          <div class="form-group">
+            <label for="usrname" style="color: #fff;"><span class="glyphicon glyphicon-user"></span> Username</label>
+            <input type="text" class="form-control" id="username" style="" placeholder="Enter username">
+          </div>
+          <button type="submit" class="btn btn-info btn-block"><span class="glyphicon glyphicon-off"></span> Enter</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModalWinner" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div style="padding:10px 10px;text-align:center">
+      </div>
+      <div class="modal-body" style="padding:40px 50px;text-align:center">
+        <h3>Kuis sudah selesai, nilai kamu<br>
+          <span id="userScore" style="font-size:30px"></span>
+        </h3>
+        <button class="btn btn-default" onclick="location.reload()">Refresh</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="myModalReady" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div style="padding:10px 10px;text-align:center">
+      </div>
+      <div style="text-align: center;">
+        <img src="images/load.gif" style="width: 300px  %;">
+      </div>
+      <div class="modal-body" style="padding:40px 50px;text-align:center">
+        <h3>Hai, <span id="haiUser"></span><br>Menunggu pemain lain ...</h3>
+      </div>
+    </div>
+  </div>
+</div>
