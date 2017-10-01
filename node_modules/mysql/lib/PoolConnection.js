@@ -11,13 +11,7 @@ function PoolConnection(pool, options) {
 
   // Bind connection to pool domain
   if (Events.usingDomains) {
-    if (this.domain) {
-      this.domain.remove(this);
-    }
-
-    if (pool.domain) {
-      pool.domain.add(this);
-    }
+    this.domain = pool.domain;
   }
 
   // When a fatal error occurs the connection's protocol ends, which will cause
@@ -33,7 +27,6 @@ function PoolConnection(pool, options) {
 
 PoolConnection.prototype.release = function release() {
   var pool = this._pool;
-  var connection = this;
 
   if (!pool || pool._closed) {
     return undefined;
@@ -46,11 +39,12 @@ PoolConnection.prototype.release = function release() {
 PoolConnection.prototype._realEnd = Connection.prototype.end;
 
 PoolConnection.prototype.end = function () {
-  console.warn( 'Calling conn.end() to release a pooled connection is '
-              + 'deprecated. In next version calling conn.end() will be '
-              + 'restored to default conn.end() behavior. Use '
-              + 'conn.release() instead.'
-              );
+  console.warn(
+    'Calling conn.end() to release a pooled connection is ' +
+    'deprecated. In next version calling conn.end() will be ' +
+    'restored to default conn.end() behavior. Use ' +
+    'conn.release() instead.'
+  );
   this.release();
 };
 

@@ -3,6 +3,7 @@ var EventEmitter   = require('events').EventEmitter;
 var Packets        = require('../packets');
 var ErrorConstants = require('../constants/errors');
 
+// istanbul ignore next: Node.js < 0.10 not covered
 var listenerCount = EventEmitter.listenerCount
   || function(emitter, type){ return emitter.listeners(type).length; };
 
@@ -51,7 +52,9 @@ Sequence.prototype._packetToError = function(packet) {
   var err  = new Error(code + ': ' + packet.message);
   err.code = code;
   err.errno = packet.errno;
-  err.sqlState = packet.sqlState;
+
+  err.sqlMessage = packet.message;
+  err.sqlState   = packet.sqlState;
 
   return err;
 };
