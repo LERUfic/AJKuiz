@@ -97,7 +97,6 @@ function calcScore()
 };
 
 socket.on('recvClientAns', function(data){
-
 	if(userAns.length==0)
 	{
 		userAns.push(data);

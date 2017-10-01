@@ -70,6 +70,7 @@ $(document).on('click','.but-ans', function(e){
 	var noSoal = $('#noSoal').text();
 	var answer = $(this).attr('value');
 	var username = $("#userApp").text();
+	var room = $("#roomApp").text();
 	var data = {	
 					'id': '/#'+socket.id,
 					'username':username,
