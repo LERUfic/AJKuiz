@@ -4,31 +4,38 @@ var userAns=[];
 var userScore=[];
 var activate = '';
 $(document).ready(function(){
+	socket.emit('joinServerDash');
 	activate = setInterval(function() {
 	    socket.emit('statusHubungan', 800)
 	}, 1000);
-	$("#myModalCat").modal({
-  	backdrop: 'static',
-  	keyboard: true
+	$("#myModalRoomView").modal({
+  		backdrop: 'static',
+  		keyboard: true
 	});
 });
 
-$(document).on('click', '.but-cat', function(e)
-{
-	e.preventDefault();
-	var cat = $(this).attr('value');
-
-	$("#kategoriSoal").text(cat);
-	socket.emit('getSoal',cat);
-
-	
-	$("#myModalCat").modal('hide');
-
+socket.on("numberView", function(data){ 
+	$("#roomNumberView").text(data);
 });
 
-socket.on("sendRoomID", function(data) {
-    myRoomID = data.id;
-    //Tambahin di layout id buat naruh nama room
+$(document).on('submit','#myFormNumberView', function(e){
+	e.preventDefault();
+	$("#myModalRoomView").modal('hide');
+	$("#myModalCat").modal({
+  		backdrop: 'static',
+  		keyboard: true
+	});
+});
+
+$(document).on('click', '.but-cat', function(e){
+	e.preventDefault();
+
+	//socket.emit('cobaCoba');
+	var cat = $(this).attr('value');
+	console.log(cat);
+	socket.emit('getSoal',cat);
+
+	$("#myModalCat").modal('hide');
 });
 
 socket.on('recvSoal', function(soal){

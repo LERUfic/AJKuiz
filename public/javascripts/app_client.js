@@ -41,13 +41,13 @@ $(document).on('submit','#myFormRoom', function(e){
 		
 		$("#userApp").text(username);
 		$("#myModalReady").modal({
-	  	backdrop: 'static',
-	  	keyboard: true
+	  		backdrop: 'static',
+	  		keyboard: true
 		});
 		$("#haiUser").text(username);
 		$("#haiRoom").text(roomname);
 		//socket.emit('room', socket.id,username);
-		socket.emit('user', socket.id,username);
+		socket.emit('user', socket.id, username);
 		$('#myModal').modal('hide');
 	}
 	else alert("Nama tidak boleh kosong");

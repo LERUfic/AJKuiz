@@ -1,4 +1,4 @@
-function Room(name, id, owner) {
+function Room(id, owner) {
   this.id = id;
   this.people = [];
   this.owner = owner;

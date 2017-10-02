@@ -64,10 +64,10 @@ function purge(s, action) {
     if (s.id === room.owner) { //user in room and owns room
       if (action === "disconnect") {
         var socketids = [];
-        for (var i=0; i<sockets.length; i++) {
-          socketids.push(sockets[i].id);
+        for (var i=0; i<clients.length; i++) {
+          socketids.push(clients[i].id);
           if(_.contains((socketids)), room.people) {
-            sockets[i].leave(room.name);
+            clients[i].leave(room.name);
           }
         }
 
@@ -79,14 +79,14 @@ function purge(s, action) {
         room.people = _.without(room.people, s.id); //remove people from the room:people{}collection
         delete rooms[people[s.id].roomID]; //delete the room
         delete people[s.id]; //delete user from people collection
-        var o = _.findWhere(sockets, {'id': s.id});
-        sockets = _.without(sockets, o);
+        var o = _.findWhere(clients, {'id': s.id});
+        clients = _.without(clients, o);
       } else if (action === "removeRoom") { //room owner removes room
         var socketids = [];
-        for (var i=0; i<sockets.length; i++) {
-          socketids.push(sockets[i].id);
+        for (var i=0; i<clients.length; i++) {
+          socketids.push(clients[i].id);
           if(_.contains((socketids)), room.people) {
-            sockets[i].leave(room.name);
+            clients[i].leave(room.name);
           }
         }
 
@@ -98,20 +98,16 @@ function purge(s, action) {
         delete rooms[people[s.id].roomID];
         people[s.id].roomID = null;
         room.people = _.without(room.people, s.id); //remove people from the room:people{}collection
-        delete chatHistory[room.name]; //delete the chat history
-        sizeRooms = _.size(rooms);
-        io.sockets.emit("roomList", {rooms: rooms, count: sizeRooms});
     } else {//user in room but does not own room
       if (action === "disconnect") {
-        io.sockets.emit("update", people[s.id].name + " has disconnected from the server.");
         if (_.contains((room.people), s.id)) {
           var personIndex = room.people.indexOf(s.id);
           room.people.splice(personIndex, 1);
           s.leave(room.name);
         }
         delete people[s.id];
-        var o = _.findWhere(sockets, {'id': s.id});
-        sockets = _.without(sockets, o);
+        var o = _.findWhere(clients, {'id': s.id});
+        clients = _.without(clients, o);
         }
       }
     }
@@ -120,14 +116,31 @@ function purge(s, action) {
 
 
 io.on('connection', function(socket){
-  console.log("Socket name: "+socket.username+", Socket id: "+socket.id);
 
-  socket.on("joinServer", function(name, roomID) {
+  socket.on("joinServerDash", function() {
+    var d = new Date();
+    var id = d.valueOf();
+    var room = new Room(id, socket.id);
+    rooms[id] = room;
+
+    var name = 'layar_'+id;
+    people[socket.id] = {"name" : name, "roomID": id};
+    
+    room.addPerson(socket.id);
+    people[socket.id].roomID = id;
+    socket.room = id;
+    socket.join(socket.room);
+    
+    clients.push(socket);
+    socket.emit("numberView", id);
+  });
+
+  socket.on("joinServerClient", function(name, roomID) {
     var exists = false;
 
     _.find(people, function(key,value) {
-      if (key.name.toLowerCase() === name.toLowerCase())
-        return exists = true;
+    if (key.name.toLowerCase() === name.toLowerCase())
+      return exists = true;
     });
 
     if (exists) {
@@ -135,8 +148,8 @@ io.on('connection', function(socket){
       do {
         proposedName = name+randomNumber;
         _.find(people, function(key,value) {
-          if (key.name.toLowerCase() === proposedName.toLowerCase())
-            return exists = true;
+        if (key.name.toLowerCase() === proposedName.toLowerCase())
+          return exists = true;
         });
       } while (!exists);
       socket.emit("errorMsg", {msg: "The username already exists, please pick another one.", proposedName: proposedName});
@@ -146,20 +159,6 @@ io.on('connection', function(socket){
     }
   });
 
-  socket.on("createRoom", function() {
-      var id = new Date();
-      var room = new Room(name, id, socket.id);
-      rooms[id] = room;
-
-      //add room to socket, and auto join the creator of the room
-      socket.room = id;
-      socket.join(socket.room);
-      people[socket.id].roomID = id;
-      room.addPerson(socket.id);
-      socket.emit("sendRoomID", {id: id});
-        
-  });
-
   socket.on("joinRoom", function(id) {
     if (typeof people[socket.id] !== "undefined") {
       var room = rooms[id];
@@ -167,7 +166,6 @@ io.on('connection', function(socket){
       people[socket.id].roomID = id;
       socket.room = room.id;
       socket.join(socket.room);
-      socket.emit("sendRoomID", {id: id});
     }
   });
 
@@ -190,7 +188,7 @@ io.on('connection', function(socket){
     }
   });
 
-  socket.on('disconnect', function()
+  /*socket.on('disconnect', function()
   {
       var index = clients.indexOf(socket);
       if(index!=1)
@@ -198,22 +196,28 @@ io.on('connection', function(socket){
         clients.splice(index,1);
         console.log('Client disconnect -> id = '+ socket.id+', username');
       }
+  });*/
+
+  socket.on("cobaCoba", function(){
+    $("#myModalStart").modal();
   });
 
-  socket.on('getSoal', function(catSoal){
+  socket.on("getSoal", function(catSoal){
         //sendUserApp();
-        queryAct = "SELECT * from soalAjkuiz where kategori_ajkuiz ='"+catSoal+"'";
-        connection.query(queryAct, function(err, rows, fields) {
-        if (!err)
-        {
-            //console.log(rows);
-            io.emit('recvSoal',rows);
-        }
-        else
-        {
-            console.log('Gagal');
-        }
-      });
+        
+    queryAct = "SELECT * from soalAjkuiz where kategori_ajkuiz ='"+catSoal+"'";
+    console.log(queryAct);
+    connection.query(queryAct, function(err, rows, fields) {
+      if (!err)
+      {
+        //console.log(rows);
+        io.emit('recvSoal',rows);
+      }
+      else
+      {
+        console.log('Gagal');
+      }
+    });
   });
 
  /*socket.on('user', function(sock_id,username)
@@ -245,9 +249,8 @@ io.on('connection', function(socket){
   });
 
   socket.on('statusHubungan', function(status){
-    io.emit('status', status)
-  })
-
+    io.emit('status', status);
+  });
 });
 
 
