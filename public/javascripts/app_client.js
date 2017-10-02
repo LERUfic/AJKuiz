@@ -26,11 +26,18 @@ $(document).on('submit','#myForm', function(e){
 	username =$('#username').val();
 	if(username!='')
 	{
-		$('#myModal').modal('hide');
-		$('#myModalRoom').modal();
+		socket.emit('joinServerClient', username);
 	}
-	else alert("Nama tidak boleh kosong");
+	else alert("Username tidak boleh kosong");
 
+});
+
+socket.on('showNext', function(){
+	$('#myModal').modal('hide');
+	$('#myModalRoom').modal({
+  		backdrop: 'static',
+  		keyboard: true
+	});
 });
 
 $(document).on('submit','#myFormRoom', function(e){
@@ -47,10 +54,10 @@ $(document).on('submit','#myFormRoom', function(e){
 		$("#haiUser").text(username);
 		$("#haiRoom").text(roomname);
 		//socket.emit('room', socket.id,username);
-		socket.emit('user', socket.id, username);
+		socket.emit('joinRoom', roomname);
 		$('#myModal').modal('hide');
 	}
-	else alert("Nama tidak boleh kosong");
+	else alert("Nama room tidak boleh kosong");
 
 });
 
@@ -59,7 +66,7 @@ socket.on('status', function(status){
 		$("#clientContaint").css('display','');
 		$("#myModalReady").modal('hide');
 	}
-})
+});
 
 $(document).on('click','.but-ans', function(e){
 	e.preventDefault();
@@ -74,6 +81,7 @@ $(document).on('click','.but-ans', function(e){
 	var data = {	
 					'id': '/#'+socket.id,
 					'username':username,
+					'roomID':room,
 					'soal':noSoal,
 					'jawaban':answer
 	};
@@ -129,6 +137,6 @@ socket.on('recvScore', function(userScore){
   	backdrop: 'static',
   	keyboard: true
 	});
-})
+});
 
 

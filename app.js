@@ -135,8 +135,9 @@ io.on('connection', function(socket){
     socket.emit("numberView", id);
   });
 
-  socket.on("joinServerClient", function(name, roomID) {
+  socket.on("joinServerClient", function(name) {
     var exists = false;
+    var roomID = null;
 
     _.find(people, function(key,value) {
     if (key.name.toLowerCase() === name.toLowerCase())
@@ -144,7 +145,7 @@ io.on('connection', function(socket){
     });
 
     if (exists) {
-      var randomNumber=Math.floor(Math.random()*1001)
+      var randomNumber=Math.floor(Math.random()*1001);
       do {
         proposedName = name+randomNumber;
         _.find(people, function(key,value) {
@@ -155,7 +156,8 @@ io.on('connection', function(socket){
       socket.emit("errorMsg", {msg: "The username already exists, please pick another one.", proposedName: proposedName});
     } else {
       people[socket.id] = {"name" : name, "roomID": roomID};
-      sockets.push(socket);
+      clients.push(socket);
+      socket.emit('showNext');
     }
   });
 
@@ -198,10 +200,6 @@ io.on('connection', function(socket){
       }
   });*/
 
-  socket.on("cobaCoba", function(){
-    $("#myModalStart").modal();
-  });
-
   socket.on("getSoal", function(catSoal){
         //sendUserApp();
         
@@ -217,6 +215,18 @@ io.on('connection', function(socket){
       {
         console.log('Gagal');
       }
+    });
+  });
+
+  socket.on("getWinner", function(data){
+    connection.connect(function(err) {
+      if (err) throw err;
+      console.log("Connected!");
+      var sql = "INSERT INTO tblWinner (username, channel, urutan, score) VALUES ('"+data.username+"', '"+data.roomID+"', '"+data.urutan+"', '"+data.nilai+"')";
+          con.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log("1 record inserted");
+      });
     });
   });
 

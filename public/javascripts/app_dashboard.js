@@ -3,6 +3,7 @@ var soal_ = [];
 var userAns=[];
 var userScore=[];
 var activate = '';
+
 $(document).ready(function(){
 	socket.emit('joinServerDash');
 	activate = setInterval(function() {
@@ -75,13 +76,36 @@ function sendScore()
 	var tmpScore=[];
 	for(i in userScore)
 	{
-		tmpScore.push({'id':i,'nilai':userScore[i].nilai});
+		tmpScore.push({
+							'id':i,
+							'username' :userAns[i].username,
+							'roomID':userAns[i].room,
+							'nilai':userScore[i].nilai
+		});
 	}
 
-	socket.emit('sendScore', tmpScore);
+	tmpScore.sort(function (a, b) {
+  		return a.nilai - b.nilai;
+	});
 
+	var urut=0;
+	var finScore=[];
+	for(i in tmpScore)
+	{	
+		urut = urut+1;
+		finScore.push({
+							'id':i,
+							'username' :tmpScore[i].username,
+							'roomID':tmpScore[i].room,
+							'nilai':tmpScore[i].nilai,
+							'urutan': urut
+		});
+	}
 
-}
+	socket.emit('getWinner', finScore);
+	socket.emit('sendScore', finScore);
+};
+
 
 function calcScore()
 {
@@ -101,7 +125,7 @@ function calcScore()
 	sendScore();
 
 	//console.log(userScore);
-};
+}
 
 socket.on('recvClientAns', function(data){
 	if(userAns.length==0)
@@ -169,7 +193,7 @@ $(document).on('click', '#but-start', function(e){
 	gantiSoal(noSoal,soal_[noSoal]);
 
 	clearInterval(activate)
-	socket.emit('statusHubungan', 200)
+	socket.emit('statusHubungan', 200);
 	var interval = setInterval(function() {
 	    counter--;
 	    $("#timerCountdown").text(counter);
