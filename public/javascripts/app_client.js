@@ -65,6 +65,7 @@ socket.on('status', function(status){
 	if (status == 200) {
 		$("#clientContaint").css('display','');
 		$("#myModalReady").modal('hide');
+		$("#myModalRoom").modal('hide');
 	}
 });
 
@@ -106,10 +107,6 @@ socket.on("errorMsg", function(data) {
   $("#errMsg").append(data.msg + " Try <strong>" + data.proposedName + "</strong>");
     toggleNameForm();
     toggleChatWindow();
-});
-
-socket.on("sendRoomID", function(data) {
-    myRoomID = data.id;
 });
 
 socket.on('recvScore', function(userScore){

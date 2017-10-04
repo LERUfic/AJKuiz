@@ -166,8 +166,8 @@ io.on('connection', function(socket){
       var room = rooms[id];
       room.addPerson(socket.id);
       people[socket.id].roomID = id;
-      socket.room = room.id;
-      socket.join(socket.room);
+      socket.join(room.id);
+      console.log(people);
     }
   });
 
