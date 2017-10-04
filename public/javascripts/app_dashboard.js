@@ -3,6 +3,7 @@ var soal_ = [];
 var userAns=[];
 var userScore=[];
 var activate = '';
+var roomIDServer;
 
 $(document).ready(function(){
 	socket.emit('joinServerDash');
@@ -180,6 +181,10 @@ function gantiSoal(noSoal,soalI)
 	$("#pilihanD").text(soalI.opsiD_ajkuiz);
 }
 
+/*socket.on('recvUserRoomId', function(data){
+	roomIDServer = data;
+});*/
+
 $(document).on('click', '#but-start', function(e){
 	var noSoal=0;
 	var length_soal = soal_.length;
@@ -193,6 +198,8 @@ $(document).on('click', '#but-start', function(e){
 	gantiSoal(noSoal,soal_[noSoal]);
 
 	clearInterval(activate)
+	//socket.emit('getUserRoomId');
+	//io.sockets.in(roomIDServer).emit('statusHubungan', 200);
 	socket.emit('statusHubungan', 200);
 	var interval = setInterval(function() {
 	    counter--;

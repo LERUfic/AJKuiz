@@ -61,7 +61,7 @@ var clients = [];
 function purge(s, action) {
   if (people[s.id].roomID) { //user is in a room
     var room = rooms[people[s.id].roomID]; //check which room user is in.
-    if (s.id === room.owner) { //user in room and owns room
+    if (s.id === rooms[rooms[people[s.id].roomID]].owner) { //user in room and owns room
       if (action === "disconnect") {
         var socketids = [];
         for (var i=0; i<clients.length; i++) {
@@ -118,6 +118,7 @@ function purge(s, action) {
 io.on('connection', function(socket){
 
   socket.on("joinServerDash", function() {
+    console.log("Server "+socket.id+" join to server");
     var d = new Date();
     var id = d.valueOf();
     var room = new Room(id, socket.id);
@@ -125,12 +126,11 @@ io.on('connection', function(socket){
 
     var name = 'layar_'+id;
     people[socket.id] = {"name" : name, "roomID": id};
-    
+
     room.addPerson(socket.id);
     people[socket.id].roomID = id;
-    socket.room = id;
-    socket.join(socket.room);
-    
+    socket.join(people[socket.id].roomID);
+    console.log("Server "+socket.id+" join the room "+people[socket.id].roomID);
     clients.push(socket);
     socket.emit("numberView", id);
   });
@@ -159,15 +159,16 @@ io.on('connection', function(socket){
       clients.push(socket);
       socket.emit('showNext');
     }
+    console.log("Client "+socket.id+" Username:"+name+" join to server");
   });
 
-  socket.on("joinRoom", function(id) {
+  socket.on("joinRoom", function(noid) {
     if (typeof people[socket.id] !== "undefined") {
-      var room = rooms[id];
+      var room = rooms[noid];
       room.addPerson(socket.id);
-      people[socket.id].roomID = id;
-      socket.join(room.id);
-      console.log(people);
+      people[socket.id].roomID = noid;
+      socket.join(people[socket.id].roomID);
+      console.log("Client "+socket.id+" Username:"+people[socket.id].name+" join room "+people[socket.id].roomID);
     }
   });
 
@@ -182,6 +183,10 @@ io.on('connection', function(socket){
      if (socket.id === room.owner) {
       purge(socket, "removeRoom");
     }
+  });
+
+  socket.on("getUserRoomId", function() {
+     socket.emit('recvUserRoomId',people[socket.id].roomID);
   });
 
   socket.on("disconnect", function() {
@@ -209,7 +214,7 @@ io.on('connection', function(socket){
       if (!err)
       {
         //console.log(rows);
-        io.emit('recvSoal',rows);
+        io.sockets.in(people[socket.id].roomID).emit('recvSoal',rows);
       }
       else
       {
@@ -218,7 +223,7 @@ io.on('connection', function(socket){
     });
   });
 
-  socket.on("getWinner", function(data){
+  /*socket.on("getWinner", function(data){
     connection.connect(function(err) {
       if (err) throw err;
       console.log("Connected!");
@@ -228,7 +233,7 @@ io.on('connection', function(socket){
             console.log("1 record inserted");
       });
     });
-  });
+  });*/
 
  /*socket.on('user', function(sock_id,username)
   {
@@ -244,22 +249,22 @@ io.on('connection', function(socket){
 
 
   socket.on('receiveClient', function(data){
-      io.emit('recvClientAns', data);
+      io.sockets.in(people[socket.id].roomID).emit('recvClientAns', data);
   });
 
   socket.on('triggerNoSoal', function(noSoal, soalData){
     //console.log(soalData);
-      io.emit('recvNoSoal', noSoal, soalData);
+      io.sockets.in(people[socket.id].roomID).emit('recvNoSoal', noSoal, soalData);
   });
 
   socket.on('sendScore', function(userScore)
   {
       //console.log(userScore);
-      io.emit('recvScore', userScore);
+      io.sockets.in(people[socket.id].roomID).emit('recvScore', userScore);
   });
 
   socket.on('statusHubungan', function(status){
-    io.emit('status', status);
+    io.sockets.in(people[socket.id].roomID).emit('status', status);
   });
 });
 

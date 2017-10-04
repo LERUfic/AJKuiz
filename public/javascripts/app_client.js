@@ -47,6 +47,7 @@ $(document).on('submit','#myFormRoom', function(e){
 	{
 		
 		$("#userApp").text(username);
+		$("#roomApp").text(roomname);
 		$("#myModalReady").modal({
 	  		backdrop: 'static',
 	  		keyboard: true
