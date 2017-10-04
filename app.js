@@ -61,7 +61,7 @@ var clients = [];
 function purge(s, action) {
   if (people[s.id].roomID) { //user is in a room
     var room = rooms[people[s.id].roomID]; //check which room user is in.
-    if (s.id === rooms[rooms[people[s.id].roomID]].owner) { //user in room and owns room
+    if (s.id === rooms[people[s.id].roomID].owner) { //user in room and owns room
       if (action === "disconnect") {
         var socketids = [];
         for (var i=0; i<clients.length; i++) {
