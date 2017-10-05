@@ -58,22 +58,24 @@ var people = {};
 var rooms = {};
 var clients = [];
 
+
 function purge(s, action) {
   if (people[s.id].roomID) { //user is in a room
     var room = rooms[people[s.id].roomID]; //check which room user is in.
-    if (s.id === rooms[people[s.id].roomID].owner) { //user in room and owns room
+    if (s.id === room.owner) { //user in room and owns room
       if (action === "disconnect") {
+        //io.sockets.in(people[socket.id].roomID).emit('disconnect');
         var socketids = [];
-        for (var i=0; i<clients.length; i++) {
+        for (var i in clients) {
           socketids.push(clients[i].id);
           if(_.contains((socketids)), room.people) {
-            clients[i].leave(room.name);
+            clients[i].leave(room.id);
           }
         }
 
         if(_.contains((room.people)), s.id) {
-          for (var i=0; i<room.people.length; i++) {
-            people[room.people[i]].inroom = null;
+          for (var i in room.people){
+            people[room.people[i]].roomID = null;
           }
         }
         room.people = _.without(room.people, s.id); //remove people from the room:people{}collection
@@ -81,39 +83,34 @@ function purge(s, action) {
         delete people[s.id]; //delete user from people collection
         var o = _.findWhere(clients, {'id': s.id});
         clients = _.without(clients, o);
-      } else if (action === "removeRoom") { //room owner removes room
-        var socketids = [];
-        for (var i=0; i<clients.length; i++) {
-          socketids.push(clients[i].id);
-          if(_.contains((socketids)), room.people) {
-            clients[i].leave(room.name);
+        //socket.emit('joinServerDash');
+      } 
+      else {//user in room but does not own room
+        if (action === "disconnect") {
+          if (_.contains((room.people), s.id)) {
+            var personIndex = room.people.indexOf(s.id);
+            room.people.splice(personIndex, 1);
+            s.leave(room.id);
           }
-        }
-
-        if(_.contains((room.people)), s.id) {
-          for (var i=0; i<room.people.length; i++) {
-            people[room.people[i]].roomID = null;
-          }
-        }
-        delete rooms[people[s.id].roomID];
-        people[s.id].roomID = null;
-        room.people = _.without(room.people, s.id); //remove people from the room:people{}collection
-    } else {//user in room but does not own room
-      if (action === "disconnect") {
-        if (_.contains((room.people), s.id)) {
-          var personIndex = room.people.indexOf(s.id);
-          room.people.splice(personIndex, 1);
-          s.leave(room.name);
-        }
-        delete people[s.id];
-        var o = _.findWhere(clients, {'id': s.id});
-        clients = _.without(clients, o);
+          delete people[s.id];
+          console.log(people[s.id]);
+          var o = _.findWhere(clients, {'id': s.id});
+          clients = _.without(clients, o);
+          //socket.emit('showFirst');
         }
       }
     }
   }
+  else {
+    //The user isn't in a room, but maybe he just disconnected, handle the scenario:
+    if (action === "disconnect") {
+      delete people[s.id];
+      var o = _.findWhere(clients, {'id': s.id});
+      clients = _.without(clients, o);
+      //socket.emit('showFirst');
+    }   
+  }
 }
-
 
 io.on('connection', function(socket){
 
@@ -178,12 +175,12 @@ io.on('connection', function(socket){
       purge(socket, "leaveRoom");
   });*/
 
-  socket.on("removeRoom", function(id) {
+  /*socket.on("removeRoom", function(id) {
      var room = rooms[id];
      if (socket.id === room.owner) {
       purge(socket, "removeRoom");
     }
-  });
+  });*/
 
   socket.on("getUserRoomId", function() {
      socket.emit('recvUserRoomId',people[socket.id].roomID);
