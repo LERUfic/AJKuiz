@@ -113,7 +113,6 @@ function purge(s, action) {
 }
 
 io.on('connection', function(socket){
-
   socket.on("joinServerDash", function() {
     console.log("Server "+socket.id+" join to server");
     var d = new Date();
@@ -151,7 +150,7 @@ io.on('connection', function(socket){
         });
       } while (!exists);
       socket.emit("errorMsg", {msg: "The username already exists, please pick another one.", proposedName: proposedName});
-    } else {
+    }else{
       people[socket.id] = {"name" : name, "roomID": roomID};
       clients.push(socket);
       socket.emit('showNext');
@@ -169,26 +168,9 @@ io.on('connection', function(socket){
     }
   });
 
-  /*socket.on("leaveRoom", function(id) {
-    var room = rooms[id];
-    if (room)
-      purge(socket, "leaveRoom");
-  });*/
-
-  /*socket.on("removeRoom", function(id) {
-     var room = rooms[id];
-     if (socket.id === room.owner) {
-      purge(socket, "removeRoom");
-    }
-  });*/
-
-  socket.on("getUserRoomId", function() {
-     socket.emit('recvUserRoomId',people[socket.id].roomID);
-  });
-
   socket.on("displayTimer", function(counter) {
-     io.sockets.in(people[socket.id].roomID).emit('showTimer',counter);
-     console.log(counter);
+     io.in(people[socket.id].roomID).emit('showTimer',counter);
+     //console.log(counter);
   });
 
   socket.on("disconnect", function() {
@@ -196,16 +178,6 @@ io.on('connection', function(socket){
       purge(socket, "disconnect");
     }
   });
-
-  /*socket.on('disconnect', function()
-  {
-      var index = clients.indexOf(socket);
-      if(index!=1)
-      {
-        clients.splice(index,1);
-        console.log('Client disconnect -> id = '+ socket.id+', username');
-      }
-  });*/
 
   socket.on("getSoal", function(catSoal){
         //sendUserApp();
@@ -216,7 +188,8 @@ io.on('connection', function(socket){
       if (!err)
       {
         //console.log(rows);
-        io.sockets.in(people[socket.id].roomID).emit('recvSoal',rows);
+        //io.sockets.in(people[socket.id].roomID).emit('recvSoal',rows);
+        socket.emit('recvSoal',rows);
       }
       else
       {
@@ -225,7 +198,38 @@ io.on('connection', function(socket){
     });
   });
 
-  /*socket.on("getWinner", function(data){
+  socket.on('receiveClient', function(data){
+      console.log(data);
+      socket.broadcast.to(rooms[people[socket.id].roomID].owner).emit('recvClientAns', data);
+      //socket.emit('recvClientAns', data);
+  });
+
+  socket.on('debug', function(data){
+      console.log(data);
+  });
+
+  socket.on('triggerNoSoal', function(noSoal, soalData){
+    //console.log(soalData);
+      io.in(people[socket.id].roomID).emit('recvNoSoal', noSoal, soalData);
+  });
+
+  socket.on('sendScores', function(userScore){
+      console.log("sini");
+      socket.broadcast.to(people[socket.id].roomID).emit('recvScore', userScore);
+      //io.sockets.in(people[socket.id].roomID).emit('recvScore', userScore);
+      //socket.emit('recvScore', userScore);
+  });
+
+  socket.on('statusHubungan', function(status){
+      socket.broadcast.to(people[socket.id].roomID).emit('status', status);
+      //socket.emit('status', status);
+  });
+  socket.on('statusHubungans', function(status){
+      io.emit('status', status);
+  });
+});
+
+/*socket.on("getWinner", function(data){
     connection.connect(function(err) {
       if (err) throw err;
       console.log("Connected!");
@@ -235,9 +239,9 @@ io.on('connection', function(socket){
             console.log("1 record inserted");
       });
     });
-  });*/
+  });
 
- /*socket.on('user', function(sock_id,username)
+ socket.on('user', function(sock_id,username)
   {
       var tmp_id = '/#'+sock_id;
       for (i in clients) {
@@ -247,29 +251,34 @@ io.on('connection', function(socket){
            console.log('ID socket = '+clients[i].id+', with username = '+clients[i].username);
         }
       }
-  });*/
-
-
-  socket.on('receiveClient', function(data){
-      io.sockets.in(people[socket.id].roomID).emit('recvClientAns', data);
   });
 
-  socket.on('triggerNoSoal', function(noSoal, soalData){
-    //console.log(soalData);
-      io.sockets.in(people[socket.id].roomID).emit('recvNoSoal', noSoal, soalData);
-  });
 
-  socket.on('sendScore', function(userScore)
+  socket.on('disconnect', function()
   {
-      //console.log(userScore);
-      io.sockets.in(people[socket.id].roomID).emit('recvScore', userScore);
+      var index = clients.indexOf(socket);
+      if(index!=1)
+      {
+        clients.splice(index,1);
+        console.log('Client disconnect -> id = '+ socket.id+', username');
+      }
+  });
+  socket.on("leaveRoom", function(id) {
+    var room = rooms[id];
+    if (room)
+      purge(socket, "leaveRoom");
   });
 
-  socket.on('statusHubungan', function(status){
-      io.sockets.in(people[socket.id].roomID).emit('status', status);
+  socket.on("removeRoom", function(id) {
+     var room = rooms[id];
+     if (socket.id === room.owner) {
+      purge(socket, "removeRoom");
+    }
   });
-});
 
+  socket.on("getUserRoomId", function() {
+     socket.emit('recvUserRoomId',people[socket.id].roomID);
+  });*/
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

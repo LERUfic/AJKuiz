@@ -8,7 +8,7 @@ var roomIDServer;
 $(document).ready(function(){
 	socket.emit('joinServerDash');
 	activate = setInterval(function() {
-	    socket.emit('statusHubungan', 800)
+	socket.emit('statusHubungans', 800)
 	}, 1000);
 	$("#myModalRoomView").modal({
   		backdrop: 'static',
@@ -42,6 +42,7 @@ $(document).on('click', '.but-cat', function(e){
 
 socket.on('recvSoal', function(soal){
 	soal_=soal;
+	//socket.emit('debug', soal);
 	//console.log(soal_);
 	$("#myModalStart").modal();
 });
@@ -56,6 +57,13 @@ function findWinner()
 		{
 			max = userScore[index].nilai;
 			tmp_user = userScore[index];
+		}
+		else if(max == userScore[index].nilai)
+		{
+			if(userScore[index].timeAns < tmp_user.timeAns){
+				max = userScore[index].nilai;
+				tmp_user = userScore[index];
+			}
 		}
 		else if(max<userScore[index].nilai)
 		{
@@ -74,18 +82,22 @@ function findWinner()
 
 function sendScore()
 {
+	socket.emit('debug', "masuk sendScore");
 	var tmpScore=[];
 	for(i in userScore)
 	{
-		tmpScore.push({
+		tmpScore.push({'id':i,'nilai':userScore[i].nilai});
+		/*tmpScore.push({
 							'id':i,
 							'username' :userAns[i].username,
 							'roomID':userAns[i].room,
 							'nilai':userScore[i].nilai
-		});
+		});*/
+		socket.emit('debug', i);
 	}
-
-	tmpScore.sort(function (a, b) {
+	socket.emit('debug', tmpScore);
+	socket.emit('sendScores', tmpScore);
+	/*tmpScore.sort(function (a, b) {
   		return a.nilai - b.nilai;
 	});
 
@@ -101,16 +113,15 @@ function sendScore()
 							'nilai':tmpScore[i].nilai,
 							'urutan': urut
 		});
-	}
+	}*/
 
-	socket.emit('getWinner', finScore);
-	socket.emit('sendScore', finScore);
-};
+	//socket.emit('getWinner', finScore);
+}
 
 
 function calcScore()
 {
-	
+	//socket.emit('debug', "masuk calcScore");
 	for(i in userAns)
 	{
 		//console.log("looping");
@@ -118,25 +129,30 @@ function calcScore()
 		{
 			//console.log(userScore[userAns[i].id]);
 			userScore[userAns[i].id].nilai+=1;
+			if(userAns[i].times != null){
+				userScore[userAns[i].id].timeAns = userAns[i].times;
+				console.log(userAns[i].times);
+			}
 			//console.log(userScore[userAns[i].id]);
 		}
 	}
 
 	findWinner();
 	sendScore();
-
-	//console.log(userScore);
 }
 
 socket.on('recvClientAns', function(data){
+	//socket.emit('debug', userAns);
+	//socket.emit('debug', data);
 	if(userAns.length==0)
 	{
 		userAns.push(data);
 		//console.log(data.username)
 		userScore[data.id]={
 			'username' : data.username,
-			'nilai': 0
-			};
+			'nilai': 0,
+			'timeAns':data.times
+		};
 	}
 	else
 	{
@@ -158,8 +174,9 @@ socket.on('recvClientAns', function(data){
 			//console.log("belum input");
 			userAns.push(data);
 			userScore[data.id]={
-			'username' : data.username,
-			'nilai': 0
+				'username' : data.username,
+				'nilai': 0,
+				'timeAns':data.times
 			};
 		}
 	}
@@ -193,7 +210,7 @@ $(document).on('click', '#but-start', function(e){
 	$("#myModalStart").modal('hide');
 	$("#dashboardContent").css('display','');
 
-	var counter = 15;
+	var counter = 5;
 	$("#timerCountdown").text(counter);
 	gantiSoal(noSoal,soal_[noSoal]);
 
@@ -204,18 +221,19 @@ $(document).on('click', '#but-start', function(e){
 	var interval = setInterval(function() {
 	    counter--;
 	    socket.emit('displayTimer', counter);
-	    console.log(counter);
+	    //console.log(counter);
 	    $("#timerCountdown").text(counter);
 	    if (counter == 0) {
 	    	noSoal+=1;
 	    	if(noSoal==length_soal) 
 	    	{
+	    		//socket.emit('debug', "masuk nosoal");
 	    		clearInterval(interval);
 	    		calcScore();
 	    	}
 	        else 
 	        {		gantiSoal(noSoal,soal_[noSoal]);
-	        		counter = 15;
+	        		counter = 5;
 	        		$("#timerCountdown").text(counter);
 	        }
 	    }

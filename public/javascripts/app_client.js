@@ -83,7 +83,7 @@ $(document).on('click','.but-ans', function(e){
 	var time = new Date();
 	var times = time.valueOf();
 	var data = {	
-					'id': '/#'+socket.id,
+					'id': socket.id,
 					'username':username,
 					'roomID':room,
 					'soal':noSoal,
@@ -97,7 +97,7 @@ $(document).on('click','.but-ans', function(e){
 socket.on('showTimer', function(counter)
 {
 	$('#timerClient').text(counter);
-	console.log(counter);
+	//console.log(counter);
 });
 
 socket.on('recvNoSoal', function(noSoal, soalData)
@@ -120,8 +120,8 @@ socket.on("errorMsg", function(data) {
 });
 
 socket.on('recvScore', function(userScore){
-	var tmp_id = '/#'+socket.id;
-	//console.log(userScore);
+	var tmp_id = socket.id;
+	console.log("final");
 	/*if( userScore[tmp_id].nilai!=undefined)
 	{
 		$("#userScore").text(userScore[tmp_id].nilai);
@@ -134,6 +134,7 @@ socket.on('recvScore', function(userScore){
 		if(userScore[i].id==tmp_id)
 		{
 			$("#userScore").text(userScore[i].nilai);
+			$("#winLose").text(userScore[i].urutan);
 			flag_score=1;
 			break;
 		}
