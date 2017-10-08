@@ -186,6 +186,11 @@ io.on('connection', function(socket){
      socket.emit('recvUserRoomId',people[socket.id].roomID);
   });
 
+  socket.on("displayTimer", function(counter) {
+     io.sockets.in(people[socket.id].roomID).emit('showTimer',counter);
+     console.log(counter);
+  });
+
   socket.on("disconnect", function() {
     if (typeof people[socket.id] !== "undefined") { //this handles the refresh of the name screen
       purge(socket, "disconnect");
@@ -261,7 +266,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('statusHubungan', function(status){
-    io.sockets.in(people[socket.id].roomID).emit('status', status);
+      io.sockets.in(people[socket.id].roomID).emit('status', status);
   });
 });
 

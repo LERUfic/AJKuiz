@@ -203,6 +203,8 @@ $(document).on('click', '#but-start', function(e){
 	socket.emit('statusHubungan', 200);
 	var interval = setInterval(function() {
 	    counter--;
+	    socket.emit('displayTimer', counter);
+	    console.log(counter);
 	    $("#timerCountdown").text(counter);
 	    if (counter == 0) {
 	    	noSoal+=1;

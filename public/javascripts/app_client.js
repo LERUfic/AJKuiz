@@ -80,15 +80,24 @@ $(document).on('click','.but-ans', function(e){
 	var answer = $(this).attr('value');
 	var username = $("#userApp").text();
 	var room = $("#roomApp").text();
+	var time = new Date();
+	var times = time.valueOf();
 	var data = {	
 					'id': '/#'+socket.id,
 					'username':username,
 					'roomID':room,
 					'soal':noSoal,
-					'jawaban':answer
+					'jawaban':answer,
+					'times':times
 	};
 
 	socket.emit('receiveClient',data);
+});
+
+socket.on('showTimer', function(counter)
+{
+	$('#timerClient').text(counter);
+	console.log(counter);
 });
 
 socket.on('recvNoSoal', function(noSoal, soalData)
