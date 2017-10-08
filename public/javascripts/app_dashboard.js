@@ -51,6 +51,26 @@ function findWinner()
 {
 	var max = 0;
 	var tmp_user='';
+
+	function compare(a, b) {
+	  // Use toUpperCase() to ignore character casing
+	  const nilaiA = a.nilai;
+	  const nilaiB = b.nilai;
+
+	  let comparison = 0;
+	  if (nilaiA > nilaiB) {
+	    comparison = 1;
+	  } else if (genreA < genreB) {
+	    comparison = -1;
+	  }
+	  return comparison;
+	}
+
+	userScore.sort(compare);
+
+	socket.emit('debug', userScore);
+
+
 	for(index in userScore)
 	{
 		if(max==0)
@@ -84,9 +104,11 @@ function sendScore()
 {
 	socket.emit('debug', "masuk sendScore");
 	var tmpScore=[];
+	var no=0;
 	for(i in userScore)
 	{
-		tmpScore.push({'id':i,'nilai':userScore[i].nilai});
+		no=no+1;
+		tmpScore.push({'id':i,'urutan':no,'nilai':userScore[i].nilai});
 		/*tmpScore.push({
 							'id':i,
 							'username' :userAns[i].username,
@@ -210,7 +232,7 @@ $(document).on('click', '#but-start', function(e){
 	$("#myModalStart").modal('hide');
 	$("#dashboardContent").css('display','');
 
-	var counter = 5;
+	var counter = 15;
 	$("#timerCountdown").text(counter);
 	gantiSoal(noSoal,soal_[noSoal]);
 
@@ -233,7 +255,7 @@ $(document).on('click', '#but-start', function(e){
 	    	}
 	        else 
 	        {		gantiSoal(noSoal,soal_[noSoal]);
-	        		counter = 5;
+	        		counter = 15;
 	        		$("#timerCountdown").text(counter);
 	        }
 	    }
