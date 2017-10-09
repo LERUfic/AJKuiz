@@ -119,6 +119,14 @@ socket.on("errorMsg", function(data) {
     toggleChatWindow();
 });
 
+socket.on("errorMsg2", function(data) {
+  $("#errMsg").empty();
+  $("#errMsg").show();
+  $("#errMsg").append(data.msg);
+    toggleNameForm();
+    toggleChatWindow();
+});
+
 socket.on('recvScore', function(userScore){
 	var tmp_id = socket.id;
 	/*if( userScore[tmp_id].nilai!=undefined)

@@ -57,6 +57,7 @@ io.set("log level", 1);
 var people = {};
 var rooms = {};
 var clients = [];
+var allRooms = [];
 
 
 function purge(s, action) {
@@ -120,6 +121,8 @@ io.on('connection', function(socket){
     var room = new Room(id, socket.id);
     rooms[id] = room;
 
+    allRooms.push(id);
+
     var name = 'layar_'+id;
     people[socket.id] = {"name" : name, "roomID": id};
 
@@ -160,11 +163,25 @@ io.on('connection', function(socket){
 
   socket.on("joinRoom", function(noid) {
     if (typeof people[socket.id] !== "undefined") {
-      var room = rooms[noid];
-      room.addPerson(socket.id);
-      people[socket.id].roomID = noid;
-      socket.join(people[socket.id].roomID);
-      console.log("Client "+socket.id+" Username:"+people[socket.id].name+" join room "+people[socket.id].roomID);
+      var exists = false;
+      
+      for(var i = 0; i<allRooms.length; i++){
+        if(allRooms[i] == noid){
+          exists = true;
+          break;
+        }
+      }
+
+      if(exists){
+        var room = rooms[noid];
+        room.addPerson(socket.id);
+        people[socket.id].roomID = noid;
+        socket.join(people[socket.id].roomID);
+        console.log("Client "+socket.id+" Username:"+people[socket.id].name+" join room "+people[socket.id].roomID);
+      }
+      else{
+        socket.emit("errorMsg2", {msg: "The room does not exists, please check your input."});
+      }
     }
   });
 
