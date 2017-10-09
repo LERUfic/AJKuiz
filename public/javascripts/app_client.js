@@ -121,7 +121,6 @@ socket.on("errorMsg", function(data) {
 
 socket.on('recvScore', function(userScore){
 	var tmp_id = socket.id;
-	console.log("final");
 	/*if( userScore[tmp_id].nilai!=undefined)
 	{
 		$("#userScore").text(userScore[tmp_id].nilai);

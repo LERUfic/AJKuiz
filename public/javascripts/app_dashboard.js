@@ -34,6 +34,8 @@ $(document).on('click', '.but-cat', function(e){
 
 	//socket.emit('cobaCoba');
 	var cat = $(this).attr('value');
+	//var e = document.getElementById("optionKategori");
+	//var cat = e.options[e.selectedIndex].text;
 	console.log(cat);
 	socket.emit('getSoal',cat);
 
@@ -47,29 +49,39 @@ socket.on('recvSoal', function(soal){
 	$("#myModalStart").modal();
 });
 
+function compare(a, b) {
+	  
+  var nilaiA = a.nilai;
+  var nilaiB = b.nilai;
+  var waktuA = a.times;
+  var waktuB = b.times;
+
+  var comparison = 0;
+  if (nilaiA > nilaiB) {
+    comparison = 1;
+   	socket.emit('debug', "yang 1 coy");
+  }
+  else if (nilaiA < nilaiB) {
+    comparison = -1;
+    socket.emit('debug', "bodo amat");
+  }
+  else if((nilaiA == nilaiB) && (waktuA < waktuB)){
+  	comparison = 1;
+  	socket.emit('debug', "yang kedua ini");
+  }
+  else if((nilaiA == nilaiB) && (waktuA > waktuB)){
+  	comparison = -1;
+  	socket.emit('debug', "ketiga aja");
+  }
+  
+  socket.emit('debug', "ga masuk");
+  return comparison * -1;
+}
+
 function findWinner()
 {
 	var max = 0;
 	var tmp_user='';
-
-	function compare(a, b) {
-	  // Use toUpperCase() to ignore character casing
-	  const nilaiA = a.nilai;
-	  const nilaiB = b.nilai;
-
-	  let comparison = 0;
-	  if (nilaiA > nilaiB) {
-	    comparison = 1;
-	  } else if (genreA < genreB) {
-	    comparison = -1;
-	  }
-	  return comparison;
-	}
-
-	userScore.sort(compare);
-
-	socket.emit('debug', userScore);
-
 
 	for(index in userScore)
 	{
@@ -91,7 +103,7 @@ function findWinner()
 			tmp_user = userScore[index];
 		}
 	}
-
+	//socket.emit('debug', userScore);
 	//console.log(userScore);
 	//console.log(tmp_user);
 	if(tmp_user!='') $('#theWinner').html("Selamat untuk <span style='font-weight:bold; font-size:24px'>"+tmp_user.username+"</span> mendapatkan skor tertinggi ("+tmp_user.nilai+")");
@@ -102,23 +114,27 @@ function findWinner()
 
 function sendScore()
 {
-	socket.emit('debug', "masuk sendScore");
+	//socket.emit('debug', "masuk sendScore");
+	//socket.emit('debug', userScore);
 	var tmpScore=[];
+	var tmpScore2=[];
 	var no=0;
 	for(i in userScore)
 	{
-		no=no+1;
-		tmpScore.push({'id':i,'urutan':no,'nilai':userScore[i].nilai});
-		/*tmpScore.push({
-							'id':i,
-							'username' :userAns[i].username,
-							'roomID':userAns[i].room,
-							'nilai':userScore[i].nilai
-		});*/
-		socket.emit('debug', i);
+		
+		tmpScore.push({'id':i,'nilai':userScore[i].nilai,'username':userScore[i].username, 'times':userScore[i].timeAns});
+		//socket.emit('debug', i);
 	}
-	socket.emit('debug', tmpScore);
-	socket.emit('sendScores', tmpScore);
+
+	tmpScore.sort(compare);
+
+	for (i in tmpScore){
+		no=no+1;
+		tmpScore2.push({'id':tmpScore[i].id,'urutan':no,'nilai':tmpScore[i].nilai,'username':tmpScore[i].username, 'times':tmpScore[i].timeAns});
+	}
+	socket.emit('debug', tmpScore2);
+	socket.emit('sendScores', tmpScore2);
+	socket.emit('getWinner', tmpScore2);
 	/*tmpScore.sort(function (a, b) {
   		return a.nilai - b.nilai;
 	});
@@ -136,8 +152,6 @@ function sendScore()
 							'urutan': urut
 		});
 	}*/
-
-	//socket.emit('getWinner', finScore);
 }
 
 
@@ -153,12 +167,11 @@ function calcScore()
 			userScore[userAns[i].id].nilai+=1;
 			if(userAns[i].times != null){
 				userScore[userAns[i].id].timeAns = userAns[i].times;
-				console.log(userAns[i].times);
+				//socket.emit('debug', userAns[i].times);
 			}
 			//console.log(userScore[userAns[i].id]);
 		}
 	}
-
 	findWinner();
 	sendScore();
 }
@@ -232,7 +245,7 @@ $(document).on('click', '#but-start', function(e){
 	$("#myModalStart").modal('hide');
 	$("#dashboardContent").css('display','');
 
-	var counter = 15;
+	var counter = 2;
 	$("#timerCountdown").text(counter);
 	gantiSoal(noSoal,soal_[noSoal]);
 
@@ -255,7 +268,7 @@ $(document).on('click', '#but-start', function(e){
 	    	}
 	        else 
 	        {		gantiSoal(noSoal,soal_[noSoal]);
-	        		counter = 15;
+	        		counter = 2;
 	        		$("#timerCountdown").text(counter);
 	        }
 	    }

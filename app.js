@@ -199,7 +199,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('receiveClient', function(data){
-      console.log(data);
+      //console.log(data);
       socket.broadcast.to(rooms[people[socket.id].roomID].owner).emit('recvClientAns', data);
       //socket.emit('recvClientAns', data);
   });
@@ -214,7 +214,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('sendScores', function(userScore){
-      console.log("sini");
+      //console.log("sini");
       socket.broadcast.to(people[socket.id].roomID).emit('recvScore', userScore);
       //io.sockets.in(people[socket.id].roomID).emit('recvScore', userScore);
       //socket.emit('recvScore', userScore);
@@ -227,21 +227,20 @@ io.on('connection', function(socket){
   socket.on('statusHubungans', function(status){
       io.emit('status', status);
   });
+
+  socket.on("getWinner", function(data){
+    for (var z=0;z < data.length;z++){
+      var inputWinner = "INSERT INTO tblWinner (username, channel, urutan, score) VALUES ('"+data[z].username+"', '"+people[socket.id].roomID+"', '"+data[z].urutan+"', '"+data[z].nilai+"')";
+        connection.query(inputWinner, function (err, result) {
+          if (err) throw err;
+          console.log("1 record inserted");
+    });  
+    }
+  });
 });
 
-/*socket.on("getWinner", function(data){
-    connection.connect(function(err) {
-      if (err) throw err;
-      console.log("Connected!");
-      var sql = "INSERT INTO tblWinner (username, channel, urutan, score) VALUES ('"+data.username+"', '"+data.roomID+"', '"+data.urutan+"', '"+data.nilai+"')";
-          con.query(sql, function (err, result) {
-            if (err) throw err;
-            console.log("1 record inserted");
-      });
-    });
-  });
 
- socket.on('user', function(sock_id,username)
+ /*socket.on('user', function(sock_id,username)
   {
       var tmp_id = '/#'+sock_id;
       for (i in clients) {
