@@ -44,9 +44,9 @@ app.use('/admin', admin);
 
 var connection = mysql.createConnection({
   host     : 'localhost',
-  user     : 'sukhawari',
-  password : 'khawari',
-  database : 'ajkuis'
+  user     : 'aguelsatria',
+  password : 'root',
+  database : 'ajkuiz'
 });
 
 connection.connect();
@@ -176,7 +176,7 @@ io.on('connection', function(socket){
     console.log("Client "+socket.id+" Username:"+name+" join to server");
   });
 
-   socket.on("joinRoom", function(noid) {
+  socket.on("joinRoom", function(noid) {
     if (typeof people[socket.id] !== "undefined") {
       var exists = false;
       for(var i = 0; i<allRooms.length; i++){
