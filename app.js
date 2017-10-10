@@ -44,9 +44,9 @@ app.use('/admin', admin);
 
 var connection = mysql.createConnection({
   host     : 'localhost',
-  user     : 'aguelsatria',
-  password : 'root',
-  database : 'ajkuiz'
+  user     : 'sukhawari',
+  password : 'khawari',
+  database : 'ajkuis'
 });
 
 connection.connect();
@@ -116,8 +116,23 @@ function purge(s, action) {
 io.on('connection', function(socket){
   socket.on("joinServerDash", function() {
     console.log("Server "+socket.id+" join to server");
-    var d = new Date();
-    var id = d.valueOf();
+    //var d = new Date();
+    //var id = d.valueOf();
+    var exists = true;
+    while(exists){
+    	var add = true;
+    	var id=Math.floor(Math.random()*900)+100;
+    	for(var i=0;i<=allrooms.length;i++){
+  			if(allrooms[i] == id){
+  				add = false;
+  				console.log("acak lagi gan");
+  			}
+  		}
+  		if(add){
+  			allrooms.push(id)
+  			exists = false;
+  		}
+    }
     var room = new Room(id, socket.id);
     rooms[id] = room;
 
@@ -161,10 +176,9 @@ io.on('connection', function(socket){
     console.log("Client "+socket.id+" Username:"+name+" join to server");
   });
 
-  socket.on("joinRoom", function(noid) {
+   socket.on("joinRoom", function(noid) {
     if (typeof people[socket.id] !== "undefined") {
       var exists = false;
-      
       for(var i = 0; i<allRooms.length; i++){
         if(allRooms[i] == noid){
           exists = true;
