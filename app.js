@@ -179,6 +179,7 @@ io.on('connection', function(socket){
   socket.on("joinRoom", function(noid) {
     if (typeof people[socket.id] !== "undefined") {
       var exists = false;
+      
       for(var i = 0; i<allRooms.length; i++){
         if(allRooms[i] == noid){
           exists = true;
