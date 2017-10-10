@@ -122,14 +122,14 @@ io.on('connection', function(socket){
     while(exists){
     	var add = true;
     	var id=Math.floor(Math.random()*900)+100;
-    	for(var i=0;i<=allrooms.length;i++){
-  			if(allrooms[i] == id){
+    	for(var i=0;i<=allRooms.length;i++){
+  			if(allRooms[i] == id){
   				add = false;
   				console.log("acak lagi gan");
   			}
   		}
   		if(add){
-  			allrooms.push(id)
+  			allRooms.push(id)
   			exists = false;
   		}
     }
@@ -179,7 +179,7 @@ io.on('connection', function(socket){
   socket.on("joinRoom", function(noid) {
     if (typeof people[socket.id] !== "undefined") {
       var exists = false;
-      
+
       for(var i = 0; i<allRooms.length; i++){
         if(allRooms[i] == noid){
           exists = true;
@@ -193,9 +193,10 @@ io.on('connection', function(socket){
         people[socket.id].roomID = noid;
         socket.join(people[socket.id].roomID);
         console.log("Client "+socket.id+" Username:"+people[socket.id].name+" join room "+people[socket.id].roomID);
+        socket.emit('showReady');
       }
       else{
-        socket.emit("errorMsg2", {msg: "The room does not exists, please check your input."});
+        socket.emit("errorMsgRoom", {msg: "The room does not exists, please check your input."});
       }
     }
   });

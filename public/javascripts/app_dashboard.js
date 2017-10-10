@@ -245,7 +245,7 @@ $(document).on('click', '#but-start', function(e){
 	$("#myModalStart").modal('hide');
 	$("#dashboardContent").css('display','');
 
-	var counter = 2;
+	var counter = 15;
 	$("#timerCountdown").text(counter);
 	gantiSoal(noSoal,soal_[noSoal]);
 
@@ -268,7 +268,7 @@ $(document).on('click', '#but-start', function(e){
 	    	}
 	        else 
 	        {		gantiSoal(noSoal,soal_[noSoal]);
-	        		counter = 2;
+	        		counter = 15;
 	        		$("#timerCountdown").text(counter);
 	        }
 	    }
