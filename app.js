@@ -57,7 +57,7 @@ io.set("log level", 1);
 var people = {};
 var rooms = {};
 var clients = [];
-var allrooms = [];
+var allRooms = [];
 
 
 function purge(s, action) {
@@ -136,6 +136,8 @@ io.on('connection', function(socket){
     var room = new Room(id, socket.id);
     rooms[id] = room;
 
+    allRooms.push(id);
+
     var name = 'layar_'+id;
     people[socket.id] = {"name" : name, "roomID": id};
 
@@ -174,61 +176,27 @@ io.on('connection', function(socket){
     console.log("Client "+socket.id+" Username:"+name+" join to server");
   });
 
-  /*socket.on("joinRoom", function(noid) {
+   socket.on("joinRoom", function(noid) {
     if (typeof people[socket.id] !== "undefined") {
-      var room = rooms[noid];
-      room.addPerson(socket.id);
-      people[socket.id].roomID = noid;
-      socket.join(people[socket.id].roomID);
-      console.log("Client "+socket.id+" Username:"+people[socket.id].name+" join room "+people[socket.id].roomID);
-      socket.emit('showReady');
+      var exists = false;
+      for(var i = 0; i<allRooms.length; i++){
+        if(allRooms[i] == noid){
+          exists = true;
+          break;
+        }
+      }
+
+      if(exists){
+        var room = rooms[noid];
+        room.addPerson(socket.id);
+        people[socket.id].roomID = noid;
+        socket.join(people[socket.id].roomID);
+        console.log("Client "+socket.id+" Username:"+people[socket.id].name+" join room "+people[socket.id].roomID);
+      }
+      else{
+        socket.emit("errorMsg2", {msg: "The room does not exists, please check your input."});
+      }
     }
-    else{
-    	socket.emit("errorMsgRoom", {msg: "The room doesn't exist, please look carefully."});
-    	socket.emit('showNext');
-    }
-  });*/
-
-  socket.on("joinRoom", function(noid) {
-
-  	if (typeof people[socket.id] !== "undefined") {
-  		var exists = false;
-
-  		for(var i=0;i<allrooms.length;i++){
-  			if(allrooms[i] == noid){
-  				console.log("ketemu");
-  				exists = true;
-  				break;
-  			}
-  			else{
-  				console.log("gak ketemu");
-  			}
-  		}
-
-  	/*_.find(rooms, function(key,value) {
-    if (key.id === noid){
-  		console.log("masuk");
-  		return exists = true;
-  	}
-  	else{
-    	console.log("g masuk");
-    }
-    });*/
-
-  		if(exists){
-  		
-    		var room = rooms[noid];
-    		room.addPerson(socket.id);
-    		people[socket.id].roomID = noid;
-    		socket.join(people[socket.id].roomID);
-    		console.log("Client "+socket.id+" Username:"+people[socket.id].name+" join room "+people[socket.id].roomID);
-    		socket.emit('showReady');
-  		}
-    	else{
-    		socket.emit("errorMsgRoom", {msg: "The room doesn't exist, please look carefully."});
-    		console.log("gagal");
-    	}
-	}
   });
 
   socket.on("displayTimer", function(counter) {
@@ -262,7 +230,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('receiveClient', function(data){
-      console.log(data);
+      //console.log(data);
       socket.broadcast.to(rooms[people[socket.id].roomID].owner).emit('recvClientAns', data);
       //socket.emit('recvClientAns', data);
   });
@@ -277,7 +245,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('sendScores', function(userScore){
-      console.log("sini");
+      //console.log("sini");
       socket.broadcast.to(people[socket.id].roomID).emit('recvScore', userScore);
       //io.sockets.in(people[socket.id].roomID).emit('recvScore', userScore);
       //socket.emit('recvScore', userScore);
@@ -290,21 +258,20 @@ io.on('connection', function(socket){
   socket.on('statusHubungans', function(status){
       io.emit('status', status);
   });
+
+  socket.on("getWinner", function(data){
+    for (var z=0;z < data.length;z++){
+      var inputWinner = "INSERT INTO tblWinner (username, channel, urutan, score) VALUES ('"+data[z].username+"', '"+people[socket.id].roomID+"', '"+data[z].urutan+"', '"+data[z].nilai+"')";
+        connection.query(inputWinner, function (err, result) {
+          if (err) throw err;
+          console.log("1 record inserted");
+    });  
+    }
+  });
 });
 
-/*socket.on("getWinner", function(data){
-    connection.connect(function(err) {
-      if (err) throw err;
-      console.log("Connected!");
-      var sql = "INSERT INTO tblWinner (username, channel, urutan, score) VALUES ('"+data.username+"', '"+data.roomID+"', '"+data.urutan+"', '"+data.nilai+"')";
-          con.query(sql, function (err, result) {
-            if (err) throw err;
-            console.log("1 record inserted");
-      });
-    });
-  });
 
- socket.on('user', function(sock_id,username)
+ /*socket.on('user', function(sock_id,username)
   {
       var tmp_id = '/#'+sock_id;
       for (i in clients) {
