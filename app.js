@@ -44,9 +44,9 @@ app.use('/admin', admin);
 
 var connection = mysql.createConnection({
   host     : 'localhost',
-  user     : 'aguelsatria',
-  password : 'root',
-  database : 'ajkuiz'
+  user     : 'sukhawari',
+  password : 'khawari',
+  database : 'ajkuis'
 });
 
 connection.connect();
@@ -57,6 +57,7 @@ io.set("log level", 1);
 var people = {};
 var rooms = {};
 var clients = [];
+var allrooms = [];
 
 
 function purge(s, action) {
@@ -115,8 +116,23 @@ function purge(s, action) {
 io.on('connection', function(socket){
   socket.on("joinServerDash", function() {
     console.log("Server "+socket.id+" join to server");
-    var d = new Date();
-    var id = d.valueOf();
+    //var d = new Date();
+    //var id = d.valueOf();
+    var exists = true;
+    while(exists){
+    	var add = true;
+    	var id=Math.floor(Math.random()*900)+100;
+    	for(var i=0;i<=allrooms.length;i++){
+  			if(allrooms[i] == id){
+  				add = false;
+  				console.log("acak lagi gan");
+  			}
+  		}
+  		if(add){
+  			allrooms.push(id)
+  			exists = false;
+  		}
+    }
     var room = new Room(id, socket.id);
     rooms[id] = room;
 
@@ -158,14 +174,61 @@ io.on('connection', function(socket){
     console.log("Client "+socket.id+" Username:"+name+" join to server");
   });
 
-  socket.on("joinRoom", function(noid) {
+  /*socket.on("joinRoom", function(noid) {
     if (typeof people[socket.id] !== "undefined") {
       var room = rooms[noid];
       room.addPerson(socket.id);
       people[socket.id].roomID = noid;
       socket.join(people[socket.id].roomID);
       console.log("Client "+socket.id+" Username:"+people[socket.id].name+" join room "+people[socket.id].roomID);
+      socket.emit('showReady');
     }
+    else{
+    	socket.emit("errorMsgRoom", {msg: "The room doesn't exist, please look carefully."});
+    	socket.emit('showNext');
+    }
+  });*/
+
+  socket.on("joinRoom", function(noid) {
+
+  	if (typeof people[socket.id] !== "undefined") {
+  		var exists = false;
+
+  		for(var i=0;i<allrooms.length;i++){
+  			if(allrooms[i] == noid){
+  				console.log("ketemu");
+  				exists = true;
+  				break;
+  			}
+  			else{
+  				console.log("gak ketemu");
+  			}
+  		}
+
+  	/*_.find(rooms, function(key,value) {
+    if (key.id === noid){
+  		console.log("masuk");
+  		return exists = true;
+  	}
+  	else{
+    	console.log("g masuk");
+    }
+    });*/
+
+  		if(exists){
+  		
+    		var room = rooms[noid];
+    		room.addPerson(socket.id);
+    		people[socket.id].roomID = noid;
+    		socket.join(people[socket.id].roomID);
+    		console.log("Client "+socket.id+" Username:"+people[socket.id].name+" join room "+people[socket.id].roomID);
+    		socket.emit('showReady');
+  		}
+    	else{
+    		socket.emit("errorMsgRoom", {msg: "The room doesn't exist, please look carefully."});
+    		console.log("gagal");
+    	}
+	}
   });
 
   socket.on("displayTimer", function(counter) {

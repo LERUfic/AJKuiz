@@ -1,6 +1,7 @@
 var socket = io();
 var supportVibrate = "vibrate" in navigator;
 var username = "";
+var roomname = "";
 
 $(document).ready(function(){
 
@@ -42,24 +43,27 @@ socket.on('showNext', function(){
 
 $(document).on('submit','#myFormRoom', function(e){
 	e.preventDefault();
-	var roomname =$('#roomname').val();
+	roomname =$('#roomname').val();
 	if(roomname!='')
 	{
-		
-		$("#userApp").text(username);
-		$("#roomApp").text(roomname);
-		$("#myModalReady").modal({
-	  		backdrop: 'static',
-	  		keyboard: true
-		});
-		$("#haiUser").text(username);
-		$("#haiRoom").text(roomname);
 		//socket.emit('room', socket.id,username);
 		socket.emit('joinRoom', roomname);
-		$('#myModal').modal('hide');
+		//$('#myModal').modal('hide');
 	}
 	else alert("Nama room tidak boleh kosong");
 
+});
+
+socket.on('showReady', function(){
+	$("#userApp").text(username);
+	$("#roomApp").text(roomname);
+	$("#myModalReady").modal({
+	  		backdrop: 'static',
+	  		keyboard: true
+		});
+	$("#haiUser").text(username);
+	$("#haiRoom").text(roomname);
+	$('#myModalRoom').modal('hide');
 });
 
 socket.on('status', function(status){
@@ -115,6 +119,14 @@ socket.on("errorMsg", function(data) {
   $("#errMsg").empty();
   $("#errMsg").show();
   $("#errMsg").append(data.msg + " Try <strong>" + data.proposedName + "</strong>");
+    toggleNameForm();
+    toggleChatWindow();
+});
+
+socket.on("errorMsgRoom", function(data) {
+  $("#errMsgRoom").empty();
+  $("#errMsgRoom").show();
+  $("#errMsgRoom").append(data.msg);
     toggleNameForm();
     toggleChatWindow();
 });
