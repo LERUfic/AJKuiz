@@ -11,8 +11,6 @@ router.get('/dashboard', function(req, res, next) {
   res.render('index_dashboard', { title: 'AJKuiz Dashboard' });
 });
 
-router.get('/admin', function(req, res, next){
-	res.render('admin', { title: "Admin" });
-})
+
 
 module.exports = router;

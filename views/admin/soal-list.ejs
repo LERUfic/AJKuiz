@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<head>
+    <% include ../layouts/head-client %>
+</head>
+<body>
+    <header>
+        <div>
+            <a href="/admin">Daftar Soal</a> | 
+            <a href="/admin/add">Tambahkan Soal Baru</a> | 
+        </div>    
+        <h1><%= title %></h1>
+    </header>
+    <main>   
+         
+        <table width='80%' border=0>
+            <tr style='text-align:left; background-color:#CCC'>
+                <th>Soal AJKuiz</th>
+                <th>Opsi A</th>
+                <th>Opsi B</th>
+                <th>Opsi C</th>
+                <th>Opsi D</th>
+                <th>Kategori AJKuiz</th>
+                <th>Jawaban AJKuiz</th>
+                <th>Action</th>
+            </tr>
+            
+            <!--
+                Using FOREACH LOOP for the users array
+                
+                myArray.forEach(function(el, index) {
+                    // el - current element, i - index
+                });
+            -->
+            <% if (data) { %>
+            <% data.forEach(function(soal){ %>
+                <tr>
+                    <td><%= soal.soal_ajkuiz %></td>
+                    <td><%= soal.opsiA_ajkuiz %></td>
+                    <td><%= soal.opsiB_ajkuiz %></td>
+                    <td><%= soal.opsiC_ajkuiz %></td>
+                    <td><%= soal.opsiD_ajkuiz %></td>
+                    <td><%= soal.kategori_ajkuiz %></td>
+                    <td><%= soal.jawaban_ajkuiz %></td>
+                    <td>
+                        <div style="float:left">
+                            <a href='/admin/edit/<%= soal.soal_id %>'>Edit</a> &nbsp;                            
+                            <form method="post" action="/admin/delete/<%= soal.soal_id %>" style="float:right">
+                                <input type="submit" name="delete" value='Delete' onClick="return confirm('Tenan dihapus?')" />
+                                <input type="hidden" name="_method" value="DELETE" />
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            <% }) %>
+            <% } %>
+         
+        </table>
+    </main>
+    <footer></footer>
+</body>

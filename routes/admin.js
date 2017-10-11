@@ -1,233 +1,223 @@
 var express = require('express');
-var router = express.Router();
+var app = express();
+
+var connection = require('../db');
+// var router = express.Router();
 //var db = require('../db');
 
-router.get('/admin', function(req, res, next){
-	res.render('admin', { title: "Admin" });
-})
-//   req.getConnection(function(error, conn) {
-//         conn.query('SELECT * FROM users ORDER BY id DESC',function(err, rows, fields) {
-//             //if(err) throw err
-//             if (err) {
-//                 req.flash('error', err)
-//                 res.render('user/list', {
-//                     title: 'User List', 
-//                     data: ''
-//                 })
-//             } else {
-//                 // render to views/user/list.ejs template file
-//                 res.render('user/list', {
-//                     title: 'User List', 
-//                     data: rows
-//                 })
-//             }
-//         })
-//     })
-// });
+app.get('/', function(req, res, next){
+	connection.query('SELECT * FROM soalAjkuiz ORDER BY soal_id DESC',function(err, rows, fields) {
+		if (err) {
+			console.log("Error Selecting : %s ",err );
+		} else {
+			res.render('admin/soal-list', {
+				title: 'Daftar Soal',
+				data: rows
+			})
+		}
+	})
+});
 
 // // SHOW ADD USER FORM
-// app.get('/add', function(req, res, next){    
-//     // render to views/user/add.ejs
-//     res.render('user/add', {
-//         title: 'Add New User',
-//         name: '',
-//         age: '',
-//         email: ''        
-//     })
-// })
+app.get('/add', function(req, res, next){    
+    res.render('admin/soal-add', {
+        title: 'Tambah Soal',
+        soal_ajkuiz: '',
+        opsiA_ajkuiz: '',
+        opsiB_ajkuiz: '',
+        opsiC_ajkuiz: '',
+        opsiD_ajkuiz: '',
+        kategori_ajkuiz: '',
+        jawaban_ajkuiz: ''        
+    })
+})
  
-// // ADD NEW USER POST ACTION
-// app.post('/add', function(req, res, next){    
-//     req.assert('name', 'Name is required').notEmpty()           //Validate name
-//     req.assert('age', 'Age is required').notEmpty()             //Validate age
-//     req.assert('email', 'A valid email is required').isEmail()  //Validate email
- 
-//     var errors = req.validationErrors()
+// ADD NEW USER POST ACTION
+app.post('/add', function(req, res, next){    
+
+        var soal = {
+            soal_ajkuiz: req.sanitize('soal_ajkuiz').escape().trim(),
+            opsiA_ajkuiz: req.sanitize('opsiA_ajkuiz').escape().trim(),
+            opsiB_ajkuiz: req.sanitize('opsiB_ajkuiz').escape().trim(),
+            opsiC_ajkuiz: req.sanitize('opsiC_ajkuiz').escape().trim(),
+            opsiD_ajkuiz: req.sanitize('opsiD_ajkuiz').escape().trim(),
+            kategori_ajkuiz: req.sanitize('kategori_ajkuiz').escape().trim(),
+            jawaban_ajkuiz: req.sanitize('jawaban_ajkuiz').escape().trim()
+        }
+       	res.json(soal);
+        connection.query('INSERT INTO users SET ?', soal, function(err, result) {
+            //if(err) throw err
+            if (err) {
+                req.flash('error', err)
+                
+                // render to views/user/add.ejs
+                res.render('admin/soal-add', {
+                    title: 'Tambah Soal',
+                    soal_ajkuiz: soal.soal_ajkuiz,
+                    opsiA_ajkuiz: soal.opsiA_ajkuiz,
+                    opsiB_ajkuiz: soal.opsiB_ajkuiz,
+                    opsiC_ajkuiz: soal.opsiC_ajkuiz,
+                    opsiD_ajkuiz: soal.opsiD_ajkuiz,
+                    kategori_ajkuiz: soal.kategori_ajkuiz,
+                    jawaban_ajkuiz: soal.jawaban_ajkuiz
+                })
+            } else {                
+                req.flash('success', 'Data added successfully!')
+                
+                // render to views/user/add.ejs
+                res.render('admin/soal-add', {
+                    title: 'Tambah Soal',
+                    soal_ajkuiz: '',
+			        opsiA_ajkuiz: '',
+			        opsiB_ajkuiz: '',
+			        opsiC_ajkuiz: '',
+			        opsiD_ajkuiz: '',
+			        kategori_ajkuiz: '',
+			        jawaban_ajkuiz: ''                    
+                })
+            }
+        })
     
-//     if( !errors ) {   //No errors were found.  Passed Validation!
+})
+ 
+// SHOW EDIT USER FORM
+app.get('/edit/(:soal_id)', function(req, res, next){
+	connection.query('SELECT * FROM soalAjkuiz WHERE soal_id = ' + req.params.soal_id, function(err, rows, fields) {
+	    if(err) throw err
+	    
+	    // if user not found
+	    if (rows.length <= 0) {
+	        req.flash('error', 'User not found with id = ' + req.params.soal_id)
+	        res.redirect('/admin')
+	    }
+	    else { // if user found
+	        // render to views/admin/soal-edit.ejs template file
+	        res.render('admin/soal-edit', {
+	            title: 'Edit Soal', 
+	            //data: rows[0],
+	            soal_id: rows[0].soal_id,
+	            soal_ajkuiz: rows[0].soal_ajkuiz,
+	            opsiA_ajkuiz: rows[0].opsiA_ajkuiz,
+	            opsiB_ajkuiz: rows[0].opsiB_ajkuiz,
+	            opsiC_ajkuiz: rows[0].opsiC_ajkuiz,
+	            opsiD_ajkuiz: rows[0].opsiD_ajkuiz,
+	            kategori_ajkuiz: rows[0].kategori_ajkuiz,
+	            jawaban_ajkuiz: rows[0].jawaban_ajkuiz                  
+	        })
+	    }
+	})
+});
+ 
+// EDIT USER POST ACTION
+app.put('/edit/(:soal_id)', function(req, res, next) {
+    req.assert('soal_ajkuiz', 'Soal harus diisi').notEmpty()          
+    req.assert('opsiA_ajkuiz', 'Opsi A harus diisi').notEmpty()           
+    req.assert('opsiB_ajkuiz', 'Opsi B harus diisi').notEmpty()
+    req.assert('opsiC_ajkuiz', 'Opsi C harus diisi').notEmpty()
+    req.assert('opsiD_ajkuiz', 'Opsi D harus diisi').notEmpty()
+    req.assert('kategori_ajkuiz', 'Kategori Soal harus diisi').notEmpty()
+    req.assert('jawaban_ajkuiz', 'Jawaban Soal harus diisi').notEmpty()
+ 
+    var errors = req.validationErrors()
+    
+    if( !errors ) {   //No errors were found.  Passed Validation!
         
-//         /********************************************
-//          * Express-validator module
+        /********************************************
+         * Express-validator module
          
-//         req.body.comment = 'a <span>comment</span>';
-//         req.body.username = '   a user    ';
+        req.body.comment = 'a <span>comment</span>';
+        req.body.username = '   a user    ';
  
-//         req.sanitize('comment').escape(); // returns 'a &lt;span&gt;comment&lt;/span&gt;'
-//         req.sanitize('username').trim(); // returns 'a user'
-//         ********************************************/
-//         var user = {
-//             name: req.sanitize('name').escape().trim(),
-//             age: req.sanitize('age').escape().trim(),
-//             email: req.sanitize('email').escape().trim()
-//         }
+        req.sanitize('comment').escape(); // returns 'a &lt;span&gt;comment&lt;/span&gt;'
+        req.sanitize('username').trim(); // returns 'a user'
+        ********************************************/
+        var soal = {
+            soal_ajkuiz: req.sanitize('soal_ajkuiz').escape().trim(),
+            opsiA_ajkuiz: req.sanitize('opsiA_ajkuiz').escape().trim(),
+            opsiB_ajkuiz: req.sanitize('opsiB_ajkuiz').escape().trim(),
+            opsiC_ajkuiz: req.sanitize('opsiC_ajkuiz').escape().trim(),
+            opsiD_ajkuiz: req.sanitize('opsiD_ajkuiz').escape().trim(),
+            kategori_ajkuiz: req.sanitize('kategori_ajkuiz').escape().trim(),
+            jawaban_ajkuiz: req.sanitize('jawaban_ajkuiz').escape().trim()
+        }
         
-//         req.getConnection(function(error, conn) {
-//             conn.query('INSERT INTO users SET ?', user, function(err, result) {
-//                 //if(err) throw err
-//                 if (err) {
-//                     req.flash('error', err)
-                    
-//                     // render to views/user/add.ejs
-//                     res.render('user/add', {
-//                         title: 'Add New User',
-//                         name: user.name,
-//                         age: user.age,
-//                         email: user.email                    
-//                     })
-//                 } else {                
-//                     req.flash('success', 'Data added successfully!')
-                    
-//                     // render to views/user/add.ejs
-//                     res.render('user/add', {
-//                         title: 'Add New User',
-//                         name: '',
-//                         age: '',
-//                         email: ''                    
-//                     })
-//                 }
-//             })
-//         })
-//     }
-//     else {   //Display errors to user
-//         var error_msg = ''
-//         errors.forEach(function(error) {
-//             error_msg += error.msg + '<br>'
-//         })                
-//         req.flash('error', error_msg)        
+        connection.query('UPDATE soalAjkuiz SET ? WHERE soal_id = ', req.params.soal_id, soal, function(err, result) {
+            //if(err) throw err
+            if (err) {
+                req.flash('error', err)
+                
+                // render to views/user/add.ejs
+                res.render('admin/soal-edit', {
+                    title: 'Edit Soal',
+                    soal_id: req.params.soal_id,
+                    soal_ajkuiz: req.body.soal_ajkuiz,
+                    opsiA_ajkuiz: req.body.opsiA_ajkuiz,
+                    opsiB_ajkuiz: req.body.opsiB_ajkuiz,
+                    opsiC_ajkuiz: req.body.opsiC_ajkuiz,
+                    opsiD_ajkuiz: req.body.opsiD_ajkuiz,
+                    kategori_ajkuiz: req.body.kategori_ajkuiz,
+                    jawaban_ajkuiz: req.body.jawaban_ajkuiz
+                })
+            } else {                
+                req.flash('success', 'Data updated successfully!')
+                
+                // render to views/user/add.ejs
+                res.render('admin/soal-edit', {
+                    title: 'Edit Soal',
+                    soal_id: req.params.soal_id,
+                    soal_ajkuiz: req.body.soal_ajkuiz,
+                    opsiA_ajkuiz: req.body.opsiA_ajkuiz,
+                    opsiB_ajkuiz: req.body.opsiB_ajkuiz,
+                    opsiC_ajkuiz: req.body.opsiC_ajkuiz,
+                    opsiD_ajkuiz: req.body.opsiD_ajkuiz,
+                    kategori_ajkuiz: req.body.kategori_ajkuiz,
+                    jawaban_ajkuiz: req.body.jawaban_ajkuiz                    
+                })
+            }
+        })
+    }
+    else {   //Display errors to user
+        var error_msg = ''
+        errors.forEach(function(error) {
+            error_msg += error.msg + '<br>'
+        })                
+        req.flash('error', error_msg)        
         
-//         /**
-//          * Using req.body.name 
-//          * because req.param('name') is deprecated
-//          */ 
-//         res.render('user/add', { 
-//             title: 'Add New User',
-//             name: req.body.name,
-//             age: req.body.age,
-//             email: req.body.email
-//         })
-//     }
-// })
+        /**
+         * Using req.body.name 
+         * because req.param('name') is deprecated
+         */ 
+        res.render('admin/soal-edit', { 
+            title: 'Edit Soal',
+            soal_id: req.params.soal_id,
+            soal_ajkuiz: req.body.soal_ajkuiz,
+            opsiA_ajkuiz: req.body.opsiA_ajkuiz,
+            opsiB_ajkuiz: req.body.opsiB_ajkuiz,
+            opsiC_ajkuiz: req.body.opsiC_ajkuiz,
+            opsiD_ajkuiz: req.body.opsiD_ajkuiz,
+            kategori_ajkuiz: req.body.kategori_ajkuiz,
+            jawaban_ajkuiz: req.body.jawaban_ajkuiz
+        })
+    }
+})
  
-// // SHOW EDIT USER FORM
-// app.get('/edit/(:id)', function(req, res, next){
-//     req.getConnection(function(error, conn) {
-//         conn.query('SELECT * FROM users WHERE id = ' + req.params.id, function(err, rows, fields) {
-//             if(err) throw err
-            
-//             // if user not found
-//             if (rows.length <= 0) {
-//                 req.flash('error', 'User not found with id = ' + req.params.id)
-//                 res.redirect('/users')
-//             }
-//             else { // if user found
-//                 // render to views/user/edit.ejs template file
-//                 res.render('user/edit', {
-//                     title: 'Edit User', 
-//                     //data: rows[0],
-//                     id: rows[0].id,
-//                     name: rows[0].name,
-//                     age: rows[0].age,
-//                     email: rows[0].email                    
-//                 })
-//             }            
-//         })
-//     })
-// })
- 
-// // EDIT USER POST ACTION
-// app.put('/edit/(:id)', function(req, res, next) {
-//     req.assert('name', 'Name is required').notEmpty()           //Validate name
-//     req.assert('age', 'Age is required').notEmpty()             //Validate age
-//     req.assert('email', 'A valid email is required').isEmail()  //Validate email
- 
-//     var errors = req.validationErrors()
+// DELETE USER
+app.delete('/delete/(:soal_id)', function(req, res, next) {
+    var soal = { soal_id: req.params.soal_id }
     
-//     if( !errors ) {   //No errors were found.  Passed Validation!
-        
-//         /********************************************
-//          * Express-validator module
-         
-//         req.body.comment = 'a <span>comment</span>';
-//         req.body.username = '   a user    ';
- 
-//         req.sanitize('comment').escape(); // returns 'a &lt;span&gt;comment&lt;/span&gt;'
-//         req.sanitize('username').trim(); // returns 'a user'
-//         ********************************************/
-//         var user = {
-//             name: req.sanitize('name').escape().trim(),
-//             age: req.sanitize('age').escape().trim(),
-//             email: req.sanitize('email').escape().trim()
-//         }
-        
-//         req.getConnection(function(error, conn) {
-//             conn.query('UPDATE users SET ? WHERE id = ' + req.params.id, user, function(err, result) {
-//                 //if(err) throw err
-//                 if (err) {
-//                     req.flash('error', err)
-                    
-//                     // render to views/user/add.ejs
-//                     res.render('user/edit', {
-//                         title: 'Edit User',
-//                         id: req.params.id,
-//                         name: req.body.name,
-//                         age: req.body.age,
-//                         email: req.body.email
-//                     })
-//                 } else {
-//                     req.flash('success', 'Data updated successfully!')
-                    
-//                     // render to views/user/add.ejs
-//                     res.render('user/edit', {
-//                         title: 'Edit User',
-//                         id: req.params.id,
-//                         name: req.body.name,
-//                         age: req.body.age,
-//                         email: req.body.email
-//                     })
-//                 }
-//             })
-//         })
-//     }
-//     else {   //Display errors to user
-//         var error_msg = ''
-//         errors.forEach(function(error) {
-//             error_msg += error.msg + '<br>'
-//         })
-//         req.flash('error', error_msg)
-        
-//         /**
-//          * Using req.body.name 
-//          * because req.param('name') is deprecated
-//          */ 
-//         res.render('user/edit', { 
-//             title: 'Edit User',            
-//             id: req.params.id, 
-//             name: req.body.name,
-//             age: req.body.age,
-//             email: req.body.email
-//         })
-//     }
-// })
- 
-// // DELETE USER
-// app.delete('/delete/(:id)', function(req, res, next) {
-//     var user = { id: req.params.id }
-    
-//     req.getConnection(function(error, conn) {
-//         conn.query('DELETE FROM users WHERE id = ' + req.params.id, user, function(err, result) {
-//             //if(err) throw err
-//             if (err) {
-//                 req.flash('error', err)
-//                 // redirect to users list page
-//                 res.redirect('/users')
-//             } else {
-//                 req.flash('success', 'User deleted successfully! id = ' + req.params.id)
-//                 // redirect to users list page
-//                 res.redirect('/users')
-//             }
-//         })
-//     })
-// })
+    connection.query('DELETE FROM soalAjkuiz WHERE id = ' + req.params.soal_id, soal, function(err, result) {
+        //if(err) throw err
+        if (err) {
+            req.flash('error', err)
+            // redirect to users list page
+            res.redirect('/admin')
+        } else {
+            req.flash('success', 'User deleted successfully! id = ' + req.params.soal_id)
+            // redirect to users list page
+            res.redirect('/admin')
+        }
+    })
+})
 
 
-module.exports = router;
+module.exports = app;

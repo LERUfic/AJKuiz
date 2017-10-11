@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>
+    <% include ../layouts/head-client %>
+</head>
+<body>
+    <header>
+        <div>
+            <a href="/admin">Daftar Soal</a> | 
+            <a href="/admin/add">Tambahkan Soal Baru</a> | 
+        </div>    
+        <h1><%= title %></h1>
+    </header>
+    <main>
+ 
+         
+        <form action="/admin/add" method="post" name="form1">
+            <table width="25%" border="0">
+                <tr> 
+                    <td>Soal</td>
+                    <td><input type="text" name="soal_ajkuiz" id="soal_ajkuiz" value="<%= soal_ajkuiz %>" /></td>
+                </tr>
+                <tr> 
+                    <td>Opsi A</td>
+                    <td><input type="text" name="opsiA_ajkuiz" value="<%= opsiA_ajkuiz %>" /></td>
+                </tr>
+                <tr> 
+                    <td>Opsi B</td>
+                    <td><input type="text" name="opsiB_ajkuiz" value="<%= opsiB_ajkuiz %>" /></td>
+                </tr>
+                <tr> 
+                    <td>Opsi C</td>
+                    <td><input type="text" name="opsiC_ajkuiz" value="<%= opsiC_ajkuiz %>" /></td>
+                </tr>
+                <tr> 
+                    <td>Opsi D</td>
+                    <td><input type="text" name="opsiD_ajkuiz" value="<%= opsiD_ajkuiz %>" /></td>
+                </tr>
+                <tr> 
+                    <td>Kategori Soal</td>
+                    <td><input type="text" name="kategori_ajkuiz" value="<%= kategori_ajkuiz %>" /></td>
+                </tr>
+                <tr> 
+                    <td>Jawaban Soal</td>
+                    <td><input type="text" name="jawaban_ajkuiz" value="<%= jawaban_ajkuiz %>" /></td>
+                </tr>
+                <tr> 
+                    <td></td>
+                    <td><input type="submit" name="Submit" value="Add" /></td>
+                </tr>
+            </table>
+        </form>
+    </main>
+    <footer></footer>
+</body>
