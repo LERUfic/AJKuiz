@@ -1,26 +1,29 @@
 var listen_port = 5000;
+var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var mysql = require('mysql');
+var express_validator = require('express-validator');
 
 var Room = require('./room.js');
-
 var _ = require('underscore')._;
 
+//Load routes
 var index = require('./routes/index');
 var users = require('./routes/users');
 var admin = require('./routes/admin');
 
 var app = require('express')();
-var http = require('http').Server(app)
+var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var mysql = require('mysql');
+var connection = require ('./db');
 
-var express=require('express');
-
-
+/**
+ * setting up the templating view engine
+ */ 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -40,18 +43,6 @@ app.use('/font',express.static(path.join(__dirname, 'public/fonts')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/admin', admin);
-
-
-var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'aguelsatria',
-  password : 'root',
-  database : 'ajkuiz'
-});
-
-connection.connect();
-
-
 
 io.set("log level", 1);
 var people = {};
