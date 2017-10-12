@@ -7,6 +7,7 @@ var roomIDServer;
 
 $(document).ready(function(){
 	socket.emit('joinServerDash');
+	//socket.emit('debug', category);
 	activate = setInterval(function() {
 	socket.emit('statusHubungans', 800)
 	}, 1000);
@@ -29,6 +30,7 @@ $(document).on('submit','#myFormNumberView', function(e){
 	});
 });
 
+//$('#but-categ').click(function(e){
 $(document).on('click', '.but-cat', function(e){
 	e.preventDefault();
 
