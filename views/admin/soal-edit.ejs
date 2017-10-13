@@ -49,6 +49,15 @@
             </table>
             <input type="hidden" name="_method" value="PUT" />
         </form>
+        <br>
+        <br>
+        <br>
+        List Kategori:<br>
+        <% if (listkategori) { %>
+            <% listkategori.forEach(function(soal){ %>
+            - <%= soal %> </br>
+        <% }) %>
+        <% } %>
     </main>
     <footer></footer>
 </body>

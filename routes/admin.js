@@ -63,7 +63,27 @@ exports.edit = function(req, res){
     var id = req.params.soal_id;
     
     req.getConnection(function(err,connection){
-       
+        var kategori = [];
+        connection.query("SELECT * FROM soalAjkuiz",function(err, rows2, fields) {
+        //res.render('index_dashboard', { title: 'AJKuiz Dashboard', category: rows });
+            for(var i=0; i<rows2.length; i++){
+                if(kategori.length == 0){
+                    kategori.push(rows2[i].kategori_ajkuiz);
+                }
+                else{
+                    var flagCat = 0;
+                    for(var j=0;j<kategori.length;j++){
+                        if(kategori[j]==rows2[i].kategori_ajkuiz){
+                            flagCat = 1;
+                        }
+                    }
+                    if(flagCat==0){
+                        kategori.push(rows2[i].kategori_ajkuiz);
+                    }
+                }
+            }
+        });
+
         var query = connection.query('SELECT * FROM soalAjkuiz WHERE soal_id = ?',[id],function(err,rows)
         {   
             
@@ -79,7 +99,8 @@ exports.edit = function(req, res){
                     opsiC_ajkuiz: rows[0].opsiC_ajkuiz,
                     opsiD_ajkuiz: rows[0].opsiD_ajkuiz,
                     kategori_ajkuiz: rows[0].kategori_ajkuiz,
-                    jawaban_ajkuiz: rows[0].jawaban_ajkuiz                  
+                    jawaban_ajkuiz: rows[0].jawaban_ajkuiz,
+                    listkategori: kategori
                 })
            
          });
