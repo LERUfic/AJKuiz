@@ -6,20 +6,31 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var express_validator = require('express-validator');
-
-var Room = require('./room.js');
-var _ = require('underscore')._;
-
-//Load routes
-var index = require('./routes/index');
-var users = require('./routes/users');
-var admin = require('./routes/admin');
-
+var koneksi = require('express-myconnection'); 
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mysql = require('mysql');
+var _ = require('underscore')._;
+var Room = require('./room.js');
 var connection = require ('./db');
+
+//Load routes
+var routes = require('./routes');
+var index = require('./routes/index');
+var users = require('./routes/users');
+var admin = require('./routes/admin');
+
+app.use(
+  koneksi(mysql,{
+       host:'localhost',
+       user:'aguelsatria',
+       password:'root',
+       database:'ajkuiz'
+   },'single')
+);
+
+
 
 /**
  * setting up the templating view engine
@@ -40,11 +51,20 @@ app.use('/js',express.static(path.join(__dirname, 'public/javascripts')));
 app.use('/css',express.static(path.join(__dirname, 'public/stylesheets')));
 app.use('/font',express.static(path.join(__dirname, 'public/fonts')));
 
+//Routing
+app.get('/admin', admin.list);
+app.get('/admin/add', admin.add);
+app.post('/admin/add', admin.save);
+app.post('/admin/delete/:soal_id', admin.delete);
+app.get('/admin/edit/:soal_id', admin.edit);
+app.post('/admin/edit/:soal_id', admin.save_edit);
+
+
 app.use('/', index);
 app.use('/users', users);
-app.use('/admin', admin);
+//app.use('/admin', admin);
 
-io.set("log level", 1);
+//io.set("log level", 1);
 var people = {};
 var rooms = {};
 var clients = [];
