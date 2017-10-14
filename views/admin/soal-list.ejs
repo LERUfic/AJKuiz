@@ -5,15 +5,16 @@
 <body>
     <header>
         <div>
-            <a href="/admin">Daftar Soal</a> | 
-            <a href="/admin/add">Tambahkan Soal Baru</a> | 
+            <a href="/admin" class='button' style="vertical-align:middle" >Daftar Soal</a> | 
+            <a href="/admin/add" class='button'style="vertical-align:middle" >Tambahkan Soal Baru</a>  
         </div>    
-        <h1><%= title %></h1>
+        <h1 align="right"><%= title %></h1>
     </header>
     <main>   
-         
-        <table width='80%' border=0>
+    <div class="btn-group">
+        <table>
             <tr style='text-align:left; background-color:#CCC'>
+                <th>No</th>
                 <th>Soal AJKuiz</th>
                 <th>Opsi A</th>
                 <th>Opsi B</th>
@@ -21,7 +22,7 @@
                 <th>Opsi D</th>
                 <th>Kategori AJKuiz</th>
                 <th>Jawaban AJKuiz</th>
-                <th>Action</th>
+                <th colspan="2">Action</th>
             </tr>
             
             <!--
@@ -31,9 +32,11 @@
                     // el - current element, i - index
                 });
             -->
+            <% var no=1 %>
             <% if (res) { %>
             <% res.forEach(function(soal){ %>
                 <tr>
+                    <td><%= no %><% no++ %></td>
                     <td><%= soal.soal_ajkuiz %></td>
                     <td><%= soal.opsiA_ajkuiz %></td>
                     <td><%= soal.opsiB_ajkuiz %></td>
@@ -43,11 +46,16 @@
                     <td><%= soal.jawaban_ajkuiz %></td>
                     <td>
                         <div style="float:left">
-                            <a href='/admin/edit/<%= soal.soal_id %>'>Edit</a> &nbsp;                            
+                            
+                                <a href='/admin/edit/<%= soal.soal_id %>' class="button3">Edit</a> 
+                    </td>
+                    <td>
                             <form method="post" action="/admin/delete/<%= soal.soal_id %>" style="float:right">
-                                <input type="submit" name="delete" value='Delete' onClick="return confirm('Tenan dihapus?')" />
+                                <input type="submit" class = "button3" name="delete" value='Delete' onClick="return confirm('Tenan dihapus?')" />
                                 <input type="hidden" name="_method" value="DELETE" />
                             </form>
+                    </td>
+                           
                         </div>
                     </td>
                 </tr>
@@ -55,6 +63,7 @@
             <% } %>
          
         </table>
+         </div>
     </main>
     <footer></footer>
 </body>

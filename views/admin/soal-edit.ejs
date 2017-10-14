@@ -5,37 +5,37 @@
 <body>
     <header>
         <div>
-            <a href="/admin">Daftar Soal</a> | 
-            <a href="/admin/add">Tambahkan Soal Baru</a> | 
+            <a href="/admin" class='button' style="vertical-align:middle" >Daftar Soal</a> | 
+            <a href="/admin/add" class='button'style="vertical-align:middle" >Tambahkan Soal Baru</a>  
         </div>    
-        <h1><%= title %></h1>
+        <h1 align="right"><%= title %></h1>
     </header>
     <main>
          
         <form action="/admin/edit/<%= res.soal_id %>" method="post" name="form1">
-            <table width="25%" border="0">
+            <table>
                 <tr> 
-                    <td>Soal</td> 
-                    <td><textarea name="soal_ajkuiz" id="soal_ajkuiz" rows="3" cols="40"><%= res.soal_ajkuiz %></textarea></td>
+                    <th>Soal</th> 
+                    <td colspan="2"><textarea name="soal_ajkuiz" id="soal_ajkuiz" rows="3" cols="35"><%= res.soal_ajkuiz %></textarea></td>
                 </tr>
                 <tr> 
-                    <td>Opsi A</td>
-                    <td><textarea name="opsiA_ajkuiz" id="opsiA_ajkuiz" rows="3" cols="40"><%= res.opsiA_ajkuiz %></textarea></td>
+                    <th>Opsi A</th>
+                    <td colspan="2"><textarea name="opsiA_ajkuiz" id="opsiA_ajkuiz" rows="3" cols="35"><%= res.opsiA_ajkuiz %></textarea></td>
                 </tr>
                 <tr> 
-                    <td>Opsi B</td>
-                    <td><textarea name="opsiB_ajkuiz" id="opsiB_ajkuiz" rows="3" cols="40"><%= res.opsiB_ajkuiz %></textarea></td>
+                    <th>Opsi B</th>
+                    <td colspan="2"><textarea name="opsiB_ajkuiz" id="opsiB_ajkuiz" rows="3" cols="35"><%= res.opsiB_ajkuiz %></textarea></td>
                 </tr>
                 <tr> 
-                    <td>Opsi C</td>
-                    <td><textarea name="opsiC_ajkuiz" id="opsiC_ajkuiz" rows="3" cols="40"><%= res.opsiC_ajkuiz %></textarea></td>
+                    <th>Opsi C</th>
+                    <td colspan="2"><textarea name="opsiC_ajkuiz" id="opsiC_ajkuiz" rows="3" cols="35"><%= res.opsiC_ajkuiz %></textarea></td>
                 </tr>
                 <tr> 
-                    <td>Opsi D</td>
-                    <td><textarea name="opsiD_ajkuiz" id="opsiD_ajkuiz" rows="3" cols="40"><%= res.opsiD_ajkuiz %></textarea></td>
+                    <th>Opsi D</th>
+                    <td colspan="2"><textarea name="opsiD_ajkuiz" id="opsiD_ajkuiz" rows="3" cols="35"><%= res.opsiD_ajkuiz %></textarea></td>
                 </tr>
                <tr> 
-                    <td>Kategori Soal</td>
+                    <th>Kategori Soal</th>
                     <td>
                         <select id="kategori_ajkuiz" data-style="btn-info" name="kategori_ajkuiz">
                                 <option value="">Pilih Kategori</option>
@@ -44,17 +44,15 @@
                                 <% }) %>
                         </select>
                     </td>
-                    <td><input type="checkbox" id="kategoriBox"></td>
-                    <td><input type="text" id="kategoriText" name="kategori_ajkuiz" disabled value= "Tambah Kategori Baru"/></td>
+                    <td><input type="checkbox" id="kategoriBox"><input type="text" id="kategoriText" name="kategori_ajkuiz" disabled value= "Tambah Kategori Baru"/></td>
 
                 </tr>
                 <tr> 
-                    <td>Jawaban Soal</td>
-                    <td><input type="text" name="jawaban_ajkuiz" value="<%= res.jawaban_ajkuiz %>" /></td>
+                    <th>Jawaban Soal</th>
+                   <td colspan="2"><input type="text" name="jawaban_ajkuiz" value="<%= res.jawaban_ajkuiz %>" /></td>
                 </tr>
                 <tr> 
-                    <td></td>
-                    <td><input type="submit" name="Submit" value="Edit" /></td>
+                    <td colspan="3"><b><input type="submit" class="tombol" name="Submit" value="Edit Soal" /></td>
                 </tr>
             </table>
             <input type="hidden" name="_method" value="PUT" />

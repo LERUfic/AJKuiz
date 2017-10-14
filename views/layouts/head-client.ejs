@@ -1,12 +1,141 @@
 <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=0.7, user-scalable=0"/> <!--320-->
 <title><%= title %></title>
-<link rel='stylesheet' href='css/style.css'/>
-<link rel="stylesheet" href="css/bootstrap.min.css" />
-<link rel="stylesheet" href="css/bootstrap-responsive.css" />
-<link rel="stylesheet" href="css/font-awesome.min.css" />
-<link rel="stylesheet" href="css/web.main.css" />
+<link rel='stylesheet' href='/css/style.css'/>
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/bootstrap-responsive.css" />
+<link rel="stylesheet" href="/css/font-awesome.min.css" />
+<link rel="stylesheet" href="/css/web.main.css" />
 
-<script src="js/socket.io.js"></script>
-<script src="js/jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/app_client.js"></script>
+<script src="/js/socket.io.js"></script>
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/app_client.js"></script>
+
+<style>
+.button {
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 15px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #2C95E3;
+  border: none;
+  border-radius: 13px;
+  box-shadow: 0 9px #999;
+}
+
+.button:hover {background-color: #70b9ee}
+
+.button:active {
+  background-color: #70b9ee;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+
+.button2 {
+    position: relative;
+    background-color: #2C95E3;
+    border: none;
+    font-size: 15px;
+    color: #FFFFFF;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.button2:after {
+    content: "";
+    background: #f1f1f1;
+    display: block;
+    position: absolute;
+    padding-top: 300%;
+    padding-left: 350%;
+    margin-left: -20px !important;
+    margin-top: -120%;
+    opacity: 0;
+    transition: all 0.8s
+}
+
+.button2:active:after {
+    padding: 0;
+    margin: 0;
+    opacity: 1;
+    transition: 0s
+}
+
+
+.btn-group .button3 {
+    background-color: #2C95E3; /* Green */
+    border: 1px solid green;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    float: left;
+}
+.btn-group .button3:not(:last-child) {
+    border-right: none; /* Prevent double borders */
+}
+.btn-group .button3:hover {
+    background-color: #70b9ee;
+}
+
+table, td, th {    
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+tr:nth-child(odd){background-color: #ffffff}
+
+th {
+    background-color: #2C95E3;
+    color: white;
+}
+
+body {
+    background-image: url("/images/ajkuiz.png");
+}
+
+.tombol{
+	background:#FFFD40;
+	color:#00619c;
+  	border-top:0;
+  	border-left:0;
+  	border-right:3px solid #bdc3c7;
+  	border-bottom:5px solid #bdc3c7;
+  	padding:10px 20px;
+  	text-decoration:none;
+  	font-family:sans-serif;
+  	font-size:11pt;
+  	width: 100%;
+}
+.tombol:hover {background-color: #e1e143}
+.tombol:active {
+  background-color: #e1e143;
+  transform: translateY(4px);
+}
+
+</style>
