@@ -12,9 +12,9 @@ app.get('/', function(req, res, next) {
 
 app.get('/dashboard', function(req, res, next) {
 	var kategori = [];
-	connection.query("SELECT * FROM soalAjkuiz",function(err, rows, fields) {
+	connection.query("SELECT * FROM kategori_ajkuiz",function(err, rows, fields) {
 		//res.render('index_dashboard', { title: 'AJKuiz Dashboard', category: rows });
-		for(var i=0; i<rows.length; i++){
+		/*for(var i=0; i<rows.length; i++){
 			if(kategori.length == 0){
 				kategori.push(rows[i].kategori_ajkuiz);
 			}
@@ -29,8 +29,8 @@ app.get('/dashboard', function(req, res, next) {
 					kategori.push(rows[i].kategori_ajkuiz);
 				}
 			}
-		}
-		res.render('index_dashboard', { title: 'AJKuiz Dashboard', category: kategori });
+		}*/
+		res.render('index_dashboard', { title: 'AJKuiz Dashboard', category: rows });
 	});
 });
 

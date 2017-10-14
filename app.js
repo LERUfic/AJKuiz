@@ -226,7 +226,7 @@ io.on('connection', function(socket){
   socket.on("getSoal", function(catSoal){
         //sendUserApp();
         
-    queryAct = "SELECT * from soalAjkuiz where kategori_ajkuiz ='"+catSoal+"'";
+    queryAct = "SELECT * from soalAjkuiz where kategori_id ='"+catSoal+"'";
     console.log(queryAct);
     connection.query(queryAct, function(err, rows, fields) {
       if (!err)

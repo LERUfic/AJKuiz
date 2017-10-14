@@ -14,7 +14,8 @@
  
          
         <form action="/admin/add" method="post" name="form1">
-            <table width="25%" border="0">
+            <table width="25%" border="0" id="myTable">
+                <tbody>
                 <tr> 
                     <td>Soal</td>
                     <td><textarea name="soal_ajkuiz" id="soal_ajkuiz" rows="3" cols="40">Masukan soal di sini...</textarea></td>
@@ -37,7 +38,17 @@
                 </tr>
                 <tr> 
                     <td>Kategori Soal</td>
-                    <td><input type="text" name="kategori_ajkuiz" value="<%= kategori_ajkuiz %>" /></td>
+                    <td>
+                        <select id="kategori_ajkuiz" data-style="btn-info" name="kategori_ajkuiz">
+                                <option value="">Pilih Kategori</option>
+                                <% data.forEach(function(row) { %>
+                                    <option value="<%= row.nama %>"><%= row.nama %></option>
+                                <% }) %>
+                        </select>
+                    </td>
+                    <td><input type="checkbox" id="kategoriBox"></td>
+                    <td><input type="text" id="kategoriText" name="kategori_ajkuiz" disabled value="Tambah Kategori Baru"/></td>
+
                 </tr>
                 <tr> 
                     <td>Jawaban Soal</td>
@@ -47,8 +58,16 @@
                     <td></td>
                     <td><input type="submit" name="Submit" value="Add" /></td>
                 </tr>
+                </tbody>
             </table>
         </form>
     </main>
     <footer></footer>
 </body>
+
+<script>
+document.getElementById('kategoriBox').onchange = function() {
+    document.getElementById('kategoriText').disabled = !this.checked;
+    document.getElementById('kategori_ajkuiz').disabled = this.checked;
+};
+</script>

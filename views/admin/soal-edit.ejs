@@ -12,35 +12,45 @@
     </header>
     <main>
          
-        <form action="/admin/edit/<%= soal_id %>" method="post" name="form1">
+        <form action="/admin/edit/<%= res.soal_id %>" method="post" name="form1">
             <table width="25%" border="0">
                 <tr> 
                     <td>Soal</td> 
-                    <td><textarea name="soal_ajkuiz" id="soal_ajkuiz" rows="3" cols="40"><%= soal_ajkuiz %></textarea></td>
+                    <td><textarea name="soal_ajkuiz" id="soal_ajkuiz" rows="3" cols="40"><%= res.soal_ajkuiz %></textarea></td>
                 </tr>
                 <tr> 
                     <td>Opsi A</td>
-                    <td><textarea name="opsiA_ajkuiz" id="opsiA_ajkuiz" rows="3" cols="40"><%= opsiA_ajkuiz %></textarea></td>
+                    <td><textarea name="opsiA_ajkuiz" id="opsiA_ajkuiz" rows="3" cols="40"><%= res.opsiA_ajkuiz %></textarea></td>
                 </tr>
                 <tr> 
                     <td>Opsi B</td>
-                    <td><textarea name="opsiB_ajkuiz" id="opsiB_ajkuiz" rows="3" cols="40"><%= opsiB_ajkuiz %></textarea></td>
+                    <td><textarea name="opsiB_ajkuiz" id="opsiB_ajkuiz" rows="3" cols="40"><%= res.opsiB_ajkuiz %></textarea></td>
                 </tr>
                 <tr> 
                     <td>Opsi C</td>
-                    <td><textarea name="opsiC_ajkuiz" id="opsiC_ajkuiz" rows="3" cols="40"><%= opsiC_ajkuiz %></textarea></td>
+                    <td><textarea name="opsiC_ajkuiz" id="opsiC_ajkuiz" rows="3" cols="40"><%= res.opsiC_ajkuiz %></textarea></td>
                 </tr>
                 <tr> 
                     <td>Opsi D</td>
-                    <td><textarea name="opsiD_ajkuiz" id="opsiD_ajkuiz" rows="3" cols="40"><%= opsiD_ajkuiz %></textarea></td>
+                    <td><textarea name="opsiD_ajkuiz" id="opsiD_ajkuiz" rows="3" cols="40"><%= res.opsiD_ajkuiz %></textarea></td>
                 </tr>
-                <tr> 
+               <tr> 
                     <td>Kategori Soal</td>
-                    <td><input type="text" name="kategori_ajkuiz" value="<%= kategori_ajkuiz %>" /></td>
+                    <td>
+                        <select id="kategori_ajkuiz" data-style="btn-info" name="kategori_ajkuiz">
+                                <option value="">Pilih Kategori</option>
+                                <% kategori.forEach(function(row) { %>
+                                    <option value="<%= row.nama %>" <% if (row.nama == res.kategori_id){ %>selected <%}%> %> ><%= row.nama %></option>
+                                <% }) %>
+                        </select>
+                    </td>
+                    <td><input type="checkbox" id="kategoriBox"></td>
+                    <td><input type="text" id="kategoriText" name="kategori_ajkuiz" disabled value= "Tambah Kategori Baru"/></td>
+
                 </tr>
                 <tr> 
                     <td>Jawaban Soal</td>
-                    <td><input type="text" name="jawaban_ajkuiz" value="<%= jawaban_ajkuiz %>" /></td>
+                    <td><input type="text" name="jawaban_ajkuiz" value="<%= res.jawaban_ajkuiz %>" /></td>
                 </tr>
                 <tr> 
                     <td></td>
@@ -49,15 +59,13 @@
             </table>
             <input type="hidden" name="_method" value="PUT" />
         </form>
-        <br>
-        <br>
-        <br>
-        List Kategori:<br>
-        <% if (listkategori) { %>
-            <% listkategori.forEach(function(soal){ %>
-            - <%= soal %> </br>
-        <% }) %>
-        <% } %>
     </main>
     <footer></footer>
 </body>
+
+<script>
+document.getElementById('kategoriBox').onchange = function() {
+    document.getElementById('kategoriText').disabled = !this.checked;
+    document.getElementById('kategori_ajkuiz').disabled = this.checked;
+};
+</script>

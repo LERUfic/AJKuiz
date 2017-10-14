@@ -31,17 +31,15 @@
                     // el - current element, i - index
                 });
             -->
-
-            <% if (data) { %>
-            <% data.forEach(function(soal){ %>
-
+            <% if (res) { %>
+            <% res.forEach(function(soal){ %>
                 <tr>
                     <td><%= soal.soal_ajkuiz %></td>
                     <td><%= soal.opsiA_ajkuiz %></td>
                     <td><%= soal.opsiB_ajkuiz %></td>
                     <td><%= soal.opsiC_ajkuiz %></td>
                     <td><%= soal.opsiD_ajkuiz %></td>
-                    <td><%= soal.kategori_ajkuiz %></td>
+                    <td><%= soal.kategori_id %></td>
                     <td><%= soal.jawaban_ajkuiz %></td>
                     <td>
                         <div style="float:left">

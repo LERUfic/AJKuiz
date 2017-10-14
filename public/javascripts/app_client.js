@@ -119,16 +119,16 @@ socket.on("errorMsg", function(data) {
   $("#errMsg").empty();
   $("#errMsg").show();
   $("#errMsg").append(data.msg + " Try <strong>" + data.proposedName + "</strong>");
-    toggleNameForm();
-    toggleChatWindow();
+    //toggleNameForm();
+    //toggleChatWindow();
 });
 
 socket.on("errorMsgRoom", function(data) {
   $("#errMsgRoom").empty();
   $("#errMsgRoom").show();
   $("#errMsgRoom").append(data.msg);
-    toggleNameForm();
-  	toggleChatWindow();
+    //toggleNameForm();
+  	//toggleChatWindow();
 });
 
 socket.on('recvScore', function(userScore){

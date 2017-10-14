@@ -4,6 +4,7 @@ var userAns=[];
 var userScore=[];
 var activate = '';
 var roomIDServer;
+var allRank = [];
 
 $(document).ready(function(){
 	socket.emit('joinServerDash');
@@ -35,7 +36,7 @@ $(document).on('click', '.but-cat', function(e){
 	e.preventDefault();
 
 	//socket.emit('cobaCoba');
-	var cat = $(this).attr('value');
+	var cat = $(this).attr('name');
 	//var e = document.getElementById("optionKategori");
 	//var cat = e.options[e.selectedIndex].text;
 	console.log(cat);
@@ -134,6 +135,11 @@ function sendScore()
 		no=no+1;
 		tmpScore2.push({'id':tmpScore[i].id,'urutan':no,'nilai':tmpScore[i].nilai,'username':tmpScore[i].username, 'times':tmpScore[i].timeAns});
 	}
+	
+	for (i in tmpScore2){
+  		$('#myTable tr:last').after("<tr><td>"+tmpScore2[i].username+"</td><td>"+tmpScore2[i].urutan+"</td><td>"+tmpScore2[i].nilai+"</td></tr>");
+  	}
+
 	socket.emit('debug', tmpScore2);
 	socket.emit('sendScores', tmpScore2);
 	socket.emit('getWinner', tmpScore2);
