@@ -1,4 +1,4 @@
-#AJKuiz
+# AJKuiz
 
 AJKuiz merupakan game online web-based game yang menggunakan Node.JS dan Socket.IO dalam penggunaannya. Gamenya adalah pemain menjawab pertanyaan yang ada di layar terpisah dan menggunakan device pilihan mereka untuk memilih pilihan jawabannya.
 
