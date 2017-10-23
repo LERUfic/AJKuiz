@@ -33,7 +33,7 @@ Ada beberapa perubahan dari versi sebelumnya. Diantaranya:
   * **Install Mysql**
     * Jalankan di terminal _sudo apt-get install mysql-server_
   * **Install AJKuiz**
-    * Jalankan di terminal _git clone https://github.com/LERUfic/AJKuis.git_
+    * Jalankan di terminal _git clone https://github.com/LERUfic/AJKuiz.git_
     * Masuk ke foled AJKuis
     * Jalankan di terminal _npm install --save_
     * Import AJKuiz.sql ke database
