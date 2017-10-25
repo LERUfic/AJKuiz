@@ -34,7 +34,7 @@ Ada beberapa perubahan dari versi sebelumnya. Diantaranya:
     * Jalankan di terminal _sudo apt-get install mysql-server_
   * **Install AJKuiz**
     * Jalankan di terminal _git clone https://github.com/LERUfic/AJKuiz.git_
-    * Masuk ke foled AJKuis
+    * Masuk ke folder AJKuiz
     * Jalankan di terminal _npm install --save_
     * Import AJKuiz.sql ke database
     * Silahkan ubah di app.js\(pada bagian koneksi\) dan db.js lalu sesuaikan dengan autentifikasi dan nama database di mysql
