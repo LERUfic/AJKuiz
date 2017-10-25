@@ -1,5 +1,7 @@
 # AJKuiz
 
+![](/public/images/ajkuiz.png)
+
 AJKuiz merupakan game online web-based game yang menggunakan Node.JS dan Socket.IO dalam penggunaannya. Gamenya adalah pemain menjawab pertanyaan yang ada di layar terpisah dan menggunakan device pilihan mereka untuk memilih pilihan jawabannya.
 
 ---
@@ -17,12 +19,14 @@ Ada beberapa perubahan dari versi sebelumnya. Diantaranya:
 # Installation
 
 * **Requirement**s:
+
   * Linux\(Debian-based\)
   * Npm
   * Mysql
   * NodeJS \(ver 6.x.x\)
 
 * **Cara menginstall game ini:**
+
   * **Install NodeJS**
     * Download NodeJS ver 6.x.x di [web resmi](https://nodejs.org/en/download/ "Download NodeJS") atau NodeJS [versi 6.11.3](https://intip.in/nodejs6113 "Download NodeJS v6.11.3") saat game ini dibuat.
     * Extract hasil download di /opt.
@@ -33,7 +37,7 @@ Ada beberapa perubahan dari versi sebelumnya. Diantaranya:
   * **Install Mysql**
     * Jalankan di terminal _sudo apt-get install mysql-server_
   * **Install AJKuiz**
-    * Jalankan di terminal _git clone https://github.com/LERUfic/AJKuiz.git_
+    * Jalankan di terminal _git clone _[https://github.com/LERUfic/AJKuis.git](https://github.com/LERUfic/AJKuis.git)
     * Masuk ke folder AJKuiz
     * Jalankan di terminal _npm install --save_
     * Import AJKuiz.sql ke database
@@ -56,8 +60,6 @@ Ada beberapa perubahan dari versi sebelumnya. Diantaranya:
 6. Room-server klik enter dan memilih kategori
 7. Mainkan gamenya dengan melihat pertanyaan yang ada di device room-server dan menjawabnya di device client
 
-
-
 **Cara melakukan CRUD soal AJKuiz:**
 
 1. membuka di browser IP game-server dengan port 5000 _IPGameServer:5000/admin_
@@ -68,6 +70,3 @@ Ada beberapa perubahan dari versi sebelumnya. Diantaranya:
 ##### Previous Version:
 
 ###### [https://github.com/fathoniadi/ajkuiz](https://github.com/fathoniadi/ajkuiz.git)
-
-
-
