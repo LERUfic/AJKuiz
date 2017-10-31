@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 16, 2017 at 06:11 PM
+-- Generation Time: Oct 31, 2017 at 11:11 PM
 -- Server version: 10.0.31-MariaDB-0ubuntu0.16.04.2
--- PHP Version: 7.0.24-1+ubuntu16.04.1+deb.sury.org+1
+-- PHP Version: 7.0.25-1+ubuntu16.04.1+deb.sury.org+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -39,7 +39,9 @@ INSERT INTO `kategori_ajkuiz` (`id`, `nama`) VALUES
 (1, 'teknologi'),
 (12, 'biologi'),
 (13, 'Trivia ITS'),
-(14, 'Schematics');
+(14, 'Schematics'),
+(15, 'File Management'),
+(16, 'EXPO ITS');
 
 -- --------------------------------------------------------
 
@@ -83,7 +85,7 @@ INSERT INTO `soalAjkuiz` (`soal_ajkuiz`, `opsiA_ajkuiz`, `opsiB_ajkuiz`, `opsiC_
 ('Hewan yang melindungi diri dengan mengeluarkan bau yang menyengat yaitu ....', ' Walangsangit', 'Gajah', 'Komodo', 'Jangrik', 12, 'A', 33),
 ('Hewan yang melumpuhkan mangsa dengan racun yang dimilikinya yaitu ....', 'lipan dan musang', 'macan dan kalajengking', 'ular dan singa', 'ular dan kalajengking', 12, 'D', 34),
 ('Landak melindungi diri dengan cara....', 'Sirip yang luas', 'Kulit duri yang tajam', 'Bau yang menyengat', 'Racun yang berbisa', 12, 'B', 35),
-('Kepanjangan dari ITS', 'Institut Teknologi Sepuluh November', 'Institut Teknologi Sepuluh Nopember', 'Institut Teknologi Surabaya', 'Institut Teknologi Semarang', 13, 'B', 36),
+('Kepanjangan dari ITS', 'Institut Teknologi Sepuluh November', 'Institut Teknologi Sepuluh Nopember', 'Institut Teknologi Surabaya', 'Institut Teknologi Singapore', 13, 'B', 36),
 ('Nama rektor ITS saat ini...', 'Prof. Ir. Priyo Suprobo, MS. PhD', 'Prof. Dr. Ir. Mohammad Nuh DEA', 'Prof. Dr. Ir. Triyogi Yuwono, DEA', 'Prof. Ir. Joni Hermana, M.Sc.ES. Ph.D', 13, 'D', 37),
 ('Dies Natalis ITS keberapa tahun ini?', '55', '56', '57', '58', 13, 'C', 38),
 ('Jumlah fakultas di ITS (Januari 2017)...', '8', '7', '6', '5', 13, 'A', 39),
@@ -92,7 +94,21 @@ INSERT INTO `soalAjkuiz` (`soal_ajkuiz`, `opsiA_ajkuiz`, `opsiB_ajkuiz`, `opsiC_
 ('Kepanjangan NST', 'National Seminar of Technology', 'National Seminar of Technique', 'National Semesta Teknologi', 'Nasi Sayur Tempe', 14, 'A', 42),
 ('Departemen apa yang mengadakan Schematics', 'TC', 'Informatika', 'Teknik Informatika', 'Informatics', 14, 'A', 43),
 ('Apa kepanjangan kamzin', 'Keamanan Gizi Nasional', 'Kameramen Perizinan', 'Keamanan Perizinan', 'kamzzzzziiiiiiiiiiiinnnnnnnnnnnnn', 14, 'C', 44),
-('Kepanjangan NPC adalah...', 'National Programming Contest', 'Nasi Pecel Cireng', 'Nasi Padang Cendol', 'National Programming Competition', 14, 'A', 45);
+('Kepanjangan NPC adalah...', 'National Programming Contest', 'Nasi Pecel Cireng', 'Nasi Padang Cendol', 'National Programming Competition', 14, 'A', 45),
+('7777 = ????', 'rwxrwxrwx', 'rwxrwsrwt', 'rwsrwsrwt', 'rwrrwrrwr', 15, 'C', 46),
+('r-xr-xr-x', '244', '0444', '0555', '1111', 15, 'C', 47),
+('1473 = ???', 'r--rwx-wxt', '--xrwx-xT', '---rwsrwx', 'invalid', 15, 'A', 48),
+('0777 = ???', 'rw-rw-rw-', '---------', '-wx-wx-wx', 'rwxrwxrwx', 15, 'D', 49),
+('0420 = ???', 'r---w----', 'rw-r-----', 'r--r-----', '-w-------', 15, 'A', 50),
+('0312 = ???', 'r----x-w-', '-wx--x-w-', 'r-x-w--w-', '---------', 15, 'B', 51),
+('-w-r-x--- = ???', '0250', '0341', '2500', '0333', 15, 'A', 52),
+('-wx-wx--x = ???', '0331', '0665', '0223', '0442', 15, 'A', 53),
+('rws--x--x = ???', '4511', '2633', '3142', '4711', 15, 'D', 54),
+('2415 = ???', 'r----xr-x', 'r-s--xr-x', 'r----sr-x', 'rwxrwxrwx', 15, 'C', 55),
+('Apa slogan ITS EXPO.', 'salam budaya, seni, dan ilmu', 'salam seni, ilmu, dan budaya', 'salam ilmu, seni, dan budaya', 'salam budaya, ilmu dan seni', 16, 'B', 56),
+('Apa saja maskot ITS EXPO?', 'cilpa soca cosa', 'cilpa soka kosa', 'silpa soca kosa', 'cilpa soca kosa', 16, 'D', 57),
+('apa web dari ITS EXPO?', 'expo.its.ac.id', 'www.expoits.com', 'http:/www.itsexpo.co.id', 'its.expo.ac.id', 16, 'A', 58),
+('Merchandise yang tidak dijual oleh panitia ITS EXPO', 'kaos', 'gelang', 'tumblr', 'gantungan kunci', 16, 'C', 59);
 
 -- --------------------------------------------------------
 
@@ -213,12 +229,12 @@ ALTER TABLE `soalAjkuiz`
 -- AUTO_INCREMENT for table `kategori_ajkuiz`
 --
 ALTER TABLE `kategori_ajkuiz`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `soalAjkuiz`
 --
 ALTER TABLE `soalAjkuiz`
-  MODIFY `soal_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `soal_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
