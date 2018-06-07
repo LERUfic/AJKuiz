@@ -1,4 +1,4 @@
-var listen_port = 5000;
+var listen_port = 8080;
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -25,7 +25,7 @@ app.use(
   koneksi(mysql,{
        host:'localhost',
        user:'aguelsatria',
-       password:'root',
+       password:'aswijaya',
        database:'ajkuiz'
    },'single')
 );
