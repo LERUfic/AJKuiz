@@ -15,7 +15,6 @@
     "express-myconnection": "^1.0.4",
     "express-session": "^1.15.6",
     "express-validator": "^4.2.1",
-    "hbs": ">=4.0.14",
     "http": "0.0.0",
     "method-override": "^2.3.10",
     "morgan": "~1.9.1",
